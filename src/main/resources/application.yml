@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    include:
+      - secrete
+
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
