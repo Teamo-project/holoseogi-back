@@ -34,7 +34,7 @@ jobs:
         distribution: 'temurin'
         java-version: '11'
    
-     # +) datasource.yml 생성 ######################
+     # +) secrete.yml 생성 ######################
     - uses: actions/checkout@v3
     - run: touch ./src/main/resources/application-secrete.yml
     - run: echo "${{secrets.APPLICATION_SECRET}}" > ./src/main/resources/application-secrete.yml
