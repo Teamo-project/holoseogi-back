@@ -33,7 +33,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
@@ -50,9 +49,4 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-configurations {
-    all {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-    }
 }
