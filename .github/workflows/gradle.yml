@@ -30,6 +30,13 @@ jobs:
     - run: cat ./src/main/resources/application-secrete.yml
     ################################################
     
+    # +) Grant execute permission to scripts #######
+    - name: Grant execute permission to scripts
+      run: |
+        chmod +x scripts/stop.sh
+        chmod +x scripts/start.sh    
+    ################################################
+    
     # 3) Gradle 사용. arguments 를 붙이면 뒤에 그대로 실행된다고 생각하면 됨
     # 이 워크플로우는 gradle clean build 를 수행함
     - name: Build with Gradle
