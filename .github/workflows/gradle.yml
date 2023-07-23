@@ -26,15 +26,8 @@ jobs:
      ## +) secrete.yml 생성 ######################
     - uses: actions/checkout@v3
     - run: touch ./src/main/resources/application-secrete.yml
-    - run: echo "${{env.APPLICATION_SECRET}}" > ./src/main/resources/application-secrete.yml
+    - run: echo "${{secrets.APPLICATION_SECRET}}" > ./src/main/resources/application-secrete.yml
     - run: cat ./src/main/resources/application-secrete.yml
-    ################################################
-    
-    # +) Grant execute permission to scripts #######
-    - name: Grant execute permission to scripts
-      run: |
-        chmod +x scripts/stop.sh
-        chmod +x scripts/start.sh    
     ################################################
     
     # 3) Gradle 사용. arguments 를 붙이면 뒤에 그대로 실행된다고 생각하면 됨
