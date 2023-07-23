@@ -11,11 +11,18 @@ permissions:
   contents: read
 
 jobs:
+  createfile:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Secrete File in Main
+    - uses: actions/checkout@v3
+    - run: touch ./src/main/resources/application-secrete.yml
+    - run: echo "${{env.APPLICATION_SECRET}}" > ./src/main/resources/application-secrete.yml
+    - run: cat ./src/main/resources/application-secrete.yml
+    
   build:
     runs-on: ubuntu-latest
-
     steps:
-
     # 1) 워크플로우 실행 전 기본적으로 체크아웃 필요
     - uses: actions/checkout@v3
 
@@ -26,20 +33,6 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         
-     ## +) secrete.yml 생성 ######################
-    - name: Set up Secrete File in Main
-    - uses: actions/checkout@v3
-    - run: touch ./src/main/resources/application-secrete.yml
-    - run: echo "${{env.APPLICATION_SECRET}}" > ./src/main/resources/application-secrete.yml
-    - run: cat ./src/main/resources/application-secrete.yml
-
-    - name: Set up Secrete File in Test
-    - uses: actions/checkout@v3
-    - run: touch ./src/test/resources/application-secrete.yml
-    - run: echo "${{env.APPLICATION_SECRET}}" > ./src/test/resources/application-secrete.yml
-    - run: cat ./src/test/resources/application-secrete.yml
-    ################################################
-
     # 3) Gradle 사용. arguments 를 붙이면 뒤에 그대로 실행된다고 생각하면 됨
     # 이 워크플로우는 gradle clean build 를 수행함
     - name: Build with Gradle
