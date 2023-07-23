@@ -22,7 +22,14 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-
+        
+     ## +) secrete.yml 생성 ######################
+    - uses: actions/checkout@v3
+    - run: touch ./src/main/resources/application-secrete.yml
+    - run: echo "${{env.APPLICATION_SECRET}}" > ./src/main/resources/application-secrete.yml
+    - run: cat ./src/main/resources/application-secrete.yml
+    ################################################
+    
     # 3) Gradle 사용. arguments 를 붙이면 뒤에 그대로 실행된다고 생각하면 됨
     # 이 워크플로우는 gradle clean build 를 수행함
     - name: Build with Gradle
