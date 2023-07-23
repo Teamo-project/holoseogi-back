@@ -3,10 +3,10 @@ package com.holoseogi.holoseogi.security.jwt;
 import lombok.Getter;
 
 @Getter
-public class ReisueAccessToken {
+public class ReissueAccessToken {
     private final String accessToken;
 
-    public ReisueAccessToken(String accessToken) {
+    public ReissueAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
 }

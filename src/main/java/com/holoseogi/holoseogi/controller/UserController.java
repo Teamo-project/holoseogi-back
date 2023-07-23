@@ -3,6 +3,7 @@ package com.holoseogi.holoseogi.controller;
 import com.holoseogi.holoseogi.entity.User;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
+import com.holoseogi.holoseogi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
     public User getCurrentUser(@AuthenticationPrincipal CustomUserDetails user) { // login한 userId 추출 가능.
-        return userRepository.findById(user.getId()).orElseThrow(() -> new IllegalStateException("not found user"));
+        return userService.getLoginUser();
     }
 }

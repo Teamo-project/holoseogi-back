@@ -1,6 +1,6 @@
 package com.holoseogi.holoseogi.controller;
 
-import com.holoseogi.holoseogi.security.jwt.ReisueAccessToken;
+import com.holoseogi.holoseogi.security.jwt.ReissueAccessToken;
 import com.holoseogi.holoseogi.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +21,10 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/refresh")
-    public ResponseEntity<ReisueAccessToken> refreshToken(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> accessTokenMap) {
+    public ResponseEntity<ReissueAccessToken> refreshToken(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> accessTokenMap) {
 
         return ResponseEntity.ok().body(
-                new ReisueAccessToken(authService.refreshToken(request, response, accessTokenMap.get("accessToken"))) // json이 그대로 들어와서 Map으로 변경
+                new ReissueAccessToken(authService.refreshToken(request, response, accessTokenMap.get("accessToken"))) // json이 그대로 들어와서 Map으로 변경
         );
     }
 }
