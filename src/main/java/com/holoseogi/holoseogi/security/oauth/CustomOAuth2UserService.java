@@ -2,7 +2,7 @@ package com.holoseogi.holoseogi.security.oauth;
 
 import com.holoseogi.holoseogi.common.AuthProvider;
 import com.holoseogi.holoseogi.common.UserRole;
-import com.holoseogi.holoseogi.entity.User;
+import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.exception.OAuthProcessingException;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
@@ -58,6 +58,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private User createUser(OAuth2UserInfo userInfo, AuthProvider authProvider) {
         User user = User.builder()
+                .name(userInfo.getName())
                 .email(userInfo.getEmail())
                 .img(userInfo.getImageUrl())
                 .role(UserRole.USER)

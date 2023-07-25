@@ -1,6 +1,6 @@
 package com.holoseogi.holoseogi.repository;
 
-import com.holoseogi.holoseogi.entity.User;
+import com.holoseogi.holoseogi.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

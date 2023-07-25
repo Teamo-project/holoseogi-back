@@ -1,4 +1,4 @@
-package com.holoseogi.holoseogi.entity;
+package com.holoseogi.holoseogi.model.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

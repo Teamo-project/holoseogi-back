@@ -1,4 +1,4 @@
-package com.holoseogi.holoseogi.entity;
+package com.holoseogi.holoseogi.model.entity;
 
 import com.holoseogi.holoseogi.common.AuthProvider;
 import com.holoseogi.holoseogi.common.UserRole;
@@ -17,6 +17,7 @@ public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(unique = true, nullable = false)

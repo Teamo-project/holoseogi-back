@@ -1,6 +1,6 @@
 package com.holoseogi.holoseogi.service;
 
-import com.holoseogi.holoseogi.entity.User;
+import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.holoseogi.holoseogi.security;
 
-import com.holoseogi.holoseogi.entity.User;
+import com.holoseogi.holoseogi.model.entity.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
