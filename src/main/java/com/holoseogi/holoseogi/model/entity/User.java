@@ -1,7 +1,7 @@
 package com.holoseogi.holoseogi.model.entity;
 
-import com.holoseogi.holoseogi.common.AuthProvider;
-import com.holoseogi.holoseogi.common.UserRole;
+import com.holoseogi.holoseogi.type.AuthProvider;
+import com.holoseogi.holoseogi.type.UserRole;
 import lombok.*;
 
 import javax.persistence.*;

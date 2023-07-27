@@ -1,4 +1,4 @@
-package com.holoseogi.holoseogi.common;
+package com.holoseogi.holoseogi.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

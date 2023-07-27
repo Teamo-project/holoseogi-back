@@ -1,6 +1,6 @@
 package com.holoseogi.holoseogi.filter;
 
-import com.holoseogi.holoseogi.common.UserRole;
+import com.holoseogi.holoseogi.type.UserRole;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;

@@ -2,8 +2,9 @@ package com.holoseogi.holoseogi.service;
 
 import com.holoseogi.holoseogi.model.entity.Mentoring;
 import com.holoseogi.holoseogi.model.request.CreateMentoringReq;
-import com.holoseogi.holoseogi.model.response.CreateMentoringResp;
+import com.holoseogi.holoseogi.model.response.MentoringDetailResp;
 import com.holoseogi.holoseogi.repository.MentoringRepository;
+import com.holoseogi.holoseogi.type.MentoringCate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ public class MentoringService {
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .limited(request.getLimited())
+                .category(MentoringCate.findByLabel(request.getCategory()))
                 .mentor(userService.getLoginUser())
                 .build();
 
@@ -28,9 +30,9 @@ public class MentoringService {
     }
 
     @Transactional(readOnly = true)
-    public CreateMentoringResp getMentoringById(Long mentoringId) {
+    public MentoringDetailResp getMentoringById(Long mentoringId) {
         Mentoring mentoring = mentoringRepository.findById(mentoringId)
                 .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
-        return new CreateMentoringResp(mentoring);
+        return new MentoringDetailResp(mentoring);
     }
 }

@@ -1,6 +1,6 @@
 package com.holoseogi.holoseogi.security.oauth.user;
 
-import com.holoseogi.holoseogi.common.AuthProvider;
+import com.holoseogi.holoseogi.type.AuthProvider;
 import com.holoseogi.holoseogi.security.oauth.user.impl.GoogleOAuth2UserInfo;
 
 import java.util.Map;

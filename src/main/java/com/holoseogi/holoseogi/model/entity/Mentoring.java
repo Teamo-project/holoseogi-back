@@ -1,5 +1,6 @@
 package com.holoseogi.holoseogi.model.entity;
 
+import com.holoseogi.holoseogi.type.MentoringCate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,9 @@ public class Mentoring extends BaseEntity{
 
     private Integer limited;
 
+    @Enumerated(EnumType.STRING)
+    private MentoringCate category;
+
     @ColumnDefault("0")
     private Integer count;
 
@@ -38,13 +42,15 @@ public class Mentoring extends BaseEntity{
     private User mentor;
 
     @Builder
-    public Mentoring(String title, String description, Integer limited, Integer count, Boolean isReceipt, User mentor) {
+    public Mentoring(String title, String description, Integer limited, MentoringCate category, Integer count, Boolean isReceipt, User mentor) {
         this.title = title;
         this.description = description;
         this.limited = limited;
+        this.category = category;
         this.count = count;
         this.isReceipt = isReceipt;
         this.mentor = mentor;
     }
+
 }
 

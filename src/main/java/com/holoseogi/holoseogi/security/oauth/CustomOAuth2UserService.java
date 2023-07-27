@@ -1,7 +1,7 @@
 package com.holoseogi.holoseogi.security.oauth;
 
-import com.holoseogi.holoseogi.common.AuthProvider;
-import com.holoseogi.holoseogi.common.UserRole;
+import com.holoseogi.holoseogi.type.AuthProvider;
+import com.holoseogi.holoseogi.type.UserRole;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.exception.OAuthProcessingException;
 import com.holoseogi.holoseogi.repository.UserRepository;

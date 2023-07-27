@@ -1,9 +1,9 @@
 package com.holoseogi.holoseogi.service;
 
-import com.holoseogi.holoseogi.common.UserRole;
+import com.holoseogi.holoseogi.type.UserRole;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.CreateMentoringReq;
-import com.holoseogi.holoseogi.model.response.CreateMentoringResp;
+import com.holoseogi.holoseogi.model.response.MentoringDetailResp;
 import com.holoseogi.holoseogi.repository.MentoringRepository;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
@@ -75,7 +75,7 @@ class MentoringServiceTest {
         Long saveMentoringId = mentoringService.createMentoring(request);
 
         // when
-        CreateMentoringResp response = mentoringService.getMentoringById(saveMentoringId);
+        MentoringDetailResp response = mentoringService.getMentoringById(saveMentoringId);
 
         // then
         assertThat(response.getId()).isEqualTo(saveMentoringId);
