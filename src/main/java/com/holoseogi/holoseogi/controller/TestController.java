@@ -10,4 +10,9 @@ public class TestController {
     public String test() {
         return "test";
     }
+
+    @GetMapping("/oauth2/redirect")
+    public String oauth2RedirectTest() {
+        return "성공";
+    }
 }
