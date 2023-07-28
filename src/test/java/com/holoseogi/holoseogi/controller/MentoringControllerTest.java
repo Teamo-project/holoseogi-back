@@ -10,6 +10,7 @@ import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
 import com.holoseogi.holoseogi.type.MentoringCate;
 import com.holoseogi.holoseogi.type.UserRole;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +28,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -168,8 +171,42 @@ class MentoringControllerTest {
                         .header("Authorization", "Bearer debug")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(updateReq))
-                ).andExpect(status().isBadRequest())
-                .andDo(print());
+                ).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void getMentorings() throws Exception {
+        // given
+        List<Mentoring> mentorings_raw = IntStream.rangeClosed(1, 10)
+                .mapToObj(i -> Mentoring.builder()
+                        .title("법률 모집 " + i)
+                        .description("설명 " + i)
+                        .limited(5)
+                        .category(MentoringCate.findByLabel("법률"))
+                        .mentor(loginUser)
+                        .isReceipt(true)
+                        .count(0)
+                        .build())
+                .collect(Collectors.toList());
+        mentoringRepository.saveAll(mentorings_raw);
+        List<Mentoring> mentorings = IntStream.rangeClosed(1, 10)
+                .mapToObj(i -> Mentoring.builder()
+                        .title("상담 모집 " + i)
+                        .description("설명 " + i)
+                        .limited(5)
+                        .category(MentoringCate.findByLabel("상담"))
+                        .mentor(loginUser)
+                        .isReceipt(true)
+                        .count(0)
+                        .build())
+                .collect(Collectors.toList());
+        mentoringRepository.saveAll(mentorings);
+
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/mentoring/list?page=2&size=5&category=법률"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()", Matchers.is(5)))
+                .andExpect(jsonPath("$.content[0].category").value("법률"));
     }
 
     private void authorize() {

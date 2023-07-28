@@ -24,6 +24,6 @@ public enum MentoringCate {
     }
 
     public static MentoringCate findByLabel(String label) {
-        return BY_LABEL.getOrDefault(label, OTHER); // valueOf시 IllegalException 뜨는게 싫어서 따로 구현
+        return BY_LABEL.getOrDefault(label, null); // valueOf시 IllegalException 뜨는게 싫어서 따로 구현
     }
 }

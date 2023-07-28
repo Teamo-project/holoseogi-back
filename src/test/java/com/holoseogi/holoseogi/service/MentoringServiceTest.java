@@ -2,7 +2,9 @@ package com.holoseogi.holoseogi.service;
 
 import com.holoseogi.holoseogi.exception.BadRequestException;
 import com.holoseogi.holoseogi.model.entity.Mentoring;
+import com.holoseogi.holoseogi.model.request.SearchMentoring;
 import com.holoseogi.holoseogi.model.request.UpdateMentoringReq;
+import com.holoseogi.holoseogi.model.response.MentoringListResp;
 import com.holoseogi.holoseogi.type.MentoringCate;
 import com.holoseogi.holoseogi.type.UserRole;
 import com.holoseogi.holoseogi.model.entity.User;
@@ -14,6 +16,10 @@ import com.holoseogi.holoseogi.security.CustomUserDetails;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,7 +29,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -151,6 +159,117 @@ class MentoringServiceTest {
         Assertions.assertThrows(BadRequestException.class, () ->{
             mentoringService.updateMentoringDetail(before.getId(), updateReq);
         });
+    }
+
+    @Test
+    @DisplayName("멘토링 목록을 조회할 수 있다.")
+    public void getMentorings() throws Exception {
+        // given
+        List<Mentoring> mentorings_raw = IntStream.rangeClosed(1, 10)
+                .mapToObj(i -> Mentoring.builder()
+                        .title("법률 모집 " + i)
+                        .description("설명 " + i)
+                        .limited(5)
+                        .category(MentoringCate.findByLabel("법률"))
+                        .mentor(loginUser)
+                        .isReceipt(true)
+                        .count(0)
+                        .build())
+                .collect(Collectors.toList());
+        mentoringRepository.saveAll(mentorings_raw);
+
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "createDate");
+        SearchMentoring search = SearchMentoring.builder()
+                .build();
+
+        // when
+        Page<MentoringListResp> response = mentoringService.getMentorings(pageable, search);
+
+        // then
+        assertThat(response.getContent().size()).isEqualTo(5);
+    }
+    @Test
+    @DisplayName("멘토링 글을 title로 검색할 수 있다.")
+    public void searchMentoringsByTitle() throws Exception {
+        // given
+        List<Mentoring> mentorings_raw = IntStream.rangeClosed(1, 5)
+                .mapToObj(i -> Mentoring.builder()
+                        .title("법률 모집 " + i)
+                        .description("설명 " + i)
+                        .limited(5)
+                        .category(MentoringCate.findByLabel("법률"))
+                        .mentor(loginUser)
+                        .isReceipt(true)
+                        .count(0)
+                        .build())
+                .collect(Collectors.toList());
+        mentoringRepository.saveAll(mentorings_raw);
+
+        List<Mentoring> mentorings = IntStream.rangeClosed(1, 5)
+                .mapToObj(i -> Mentoring.builder()
+                        .title("상담 모집 " + i)
+                        .description("설명 " + i)
+                        .limited(5)
+                        .category(MentoringCate.findByLabel("상담"))
+                        .mentor(loginUser)
+                        .isReceipt(true)
+                        .count(0)
+                        .build())
+                .collect(Collectors.toList());
+        mentoringRepository.saveAll(mentorings);
+
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "createDate");
+        SearchMentoring search = SearchMentoring.builder()
+                .title("5")
+                .build();
+
+        // when
+        Page<MentoringListResp> response = mentoringService.getMentorings(pageable, search);
+
+        // then
+        assertThat(response.getContent().size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("멘토링 글을 category로 검색할 수 있다.")
+    public void searchMentoringsByCategory() throws Exception {
+        // given
+        List<Mentoring> mentorings_raw = IntStream.rangeClosed(1, 5)
+                .mapToObj(i -> Mentoring.builder()
+                        .title("법률 모집 " + i)
+                        .description("설명 " + i)
+                        .limited(5)
+                        .category(MentoringCate.findByLabel("법률"))
+                        .mentor(loginUser)
+                        .isReceipt(true)
+                        .count(0)
+                        .build())
+                .collect(Collectors.toList());
+        mentoringRepository.saveAll(mentorings_raw);
+
+        List<Mentoring> mentorings = IntStream.rangeClosed(1, 5)
+                .mapToObj(i -> Mentoring.builder()
+                        .title("상담 모집 " + i)
+                        .description("설명 " + i)
+                        .limited(5)
+                        .category(MentoringCate.findByLabel("상담"))
+                        .mentor(loginUser)
+                        .isReceipt(true)
+                        .count(0)
+                        .build())
+                .collect(Collectors.toList());
+        mentoringRepository.saveAll(mentorings);
+
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "createDate");
+        SearchMentoring search = SearchMentoring.builder()
+                .category("상담")
+                .build();
+
+        // when
+        Page<MentoringListResp> response = mentoringService.getMentorings(pageable, search);
+
+        // then
+        assertThat(response.getContent().size()).isEqualTo(5);
     }
 
     private void authorize() {

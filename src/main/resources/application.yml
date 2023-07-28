@@ -7,3 +7,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true # 페이지 1부터 시작하도록
