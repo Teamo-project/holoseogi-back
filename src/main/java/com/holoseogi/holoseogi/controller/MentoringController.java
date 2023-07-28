@@ -1,6 +1,7 @@
 package com.holoseogi.holoseogi.controller;
 
 import com.holoseogi.holoseogi.model.request.CreateMentoringReq;
+import com.holoseogi.holoseogi.model.request.UpdateMentoringReq;
 import com.holoseogi.holoseogi.model.response.MentoringDetailResp;
 import com.holoseogi.holoseogi.service.MentoringService;
 import lombok.RequiredArgsConstructor;
@@ -29,4 +30,10 @@ public class MentoringController {
         return ResponseEntity.ok(mentoringService.getMentoringById(mentoringId));
     }
 
+    @PutMapping("/{mentoringId}")
+    public ResponseEntity<MentoringDetailResp> updateMentoringDetail(@PathVariable("mentoringId") Long mentoringId, @RequestBody UpdateMentoringReq request) {
+        log.info("mentoringId = {}", mentoringId);
+        mentoringService.updateMentoringDetail(mentoringId, request);
+        return ResponseEntity.ok(mentoringService.getMentoringById(mentoringId));
+    }
 }

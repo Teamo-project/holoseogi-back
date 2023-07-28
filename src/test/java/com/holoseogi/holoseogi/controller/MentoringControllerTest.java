@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.holoseogi.holoseogi.model.entity.Mentoring;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.CreateMentoringReq;
+import com.holoseogi.holoseogi.model.request.UpdateMentoringReq;
 import com.holoseogi.holoseogi.repository.MentoringRepository;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
@@ -107,6 +108,67 @@ class MentoringControllerTest {
                 .andExpect(jsonPath("$.category").value(save.getCategory().getLabel()))
                 .andExpect(jsonPath("$.isReceipt").value(true))
                 .andExpect(jsonPath("$.mentorInfo.email").value(loginUser.getEmail()))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("PUT v1/mentoring/{mentoringId} 요청시 Mentoring객체를 수정한다.")
+    public void updateMentoringDetail() throws Exception {
+        // given
+        Mentoring save = Mentoring.builder()
+                .title("법률 멘토링 모집")
+                .description("필수적으로 알아둬야하는 법률 사항에 대한 멘토링")
+                .limited(5)
+                .count(0)
+                .category(MentoringCate.findByLabel("법률"))
+                .mentor(loginUser)
+                .build();
+        mentoringRepository.save(save);
+
+        UpdateMentoringReq updateReq = UpdateMentoringReq.builder()
+                .title("수정된 제목")
+                .category("상담")
+                .limited(10)
+                .description("수정된 설명")
+                .build();
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.put("/v1/mentoring/{mentoringId}", save.getId())
+                        .header("Authorization", "Bearer debug")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(updateReq))
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value(updateReq.getTitle()))
+                .andExpect(jsonPath("$.category").value(updateReq.getCategory()))
+                .andExpect(jsonPath("$.limited").value(updateReq.getLimited()))
+                .andExpect(jsonPath("$.description").value(updateReq.getDescription()));
+    }
+
+    @Test
+    @DisplayName("PUT v1/mentoring/{mentoringId} 요청시 기존에 count가 1이상이면 400에러가 발생한다")
+    public void cantUpdateMentoringDetail() throws Exception {
+        // given
+        Mentoring save = Mentoring.builder()
+                .title("법률 멘토링 모집")
+                .description("필수적으로 알아둬야하는 법률 사항에 대한 멘토링")
+                .limited(5)
+                .count(3)
+                .category(MentoringCate.findByLabel("법률"))
+                .mentor(loginUser)
+                .build();
+        mentoringRepository.save(save);
+
+        UpdateMentoringReq updateReq = UpdateMentoringReq.builder()
+                .title("수정된 제목")
+                .category("상담")
+                .limited(10)
+                .description("수정된 설명")
+                .build();
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.put("/v1/mentoring/{mentoringId}", save.getId())
+                        .header("Authorization", "Bearer debug")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(updateReq))
+                ).andExpect(status().isBadRequest())
                 .andDo(print());
     }
 

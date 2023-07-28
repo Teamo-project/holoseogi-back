@@ -1,7 +1,9 @@
 package com.holoseogi.holoseogi.service;
 
+import com.holoseogi.holoseogi.exception.BadRequestException;
 import com.holoseogi.holoseogi.model.entity.Mentoring;
 import com.holoseogi.holoseogi.model.request.CreateMentoringReq;
+import com.holoseogi.holoseogi.model.request.UpdateMentoringReq;
 import com.holoseogi.holoseogi.model.response.MentoringDetailResp;
 import com.holoseogi.holoseogi.repository.MentoringRepository;
 import com.holoseogi.holoseogi.type.MentoringCate;
@@ -34,5 +36,17 @@ public class MentoringService {
         Mentoring mentoring = mentoringRepository.findById(mentoringId)
                 .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
         return new MentoringDetailResp(mentoring);
+    }
+
+    @Transactional
+    public void updateMentoringDetail(Long mentoringId, UpdateMentoringReq request) {
+        Mentoring mentoring = mentoringRepository.findById(mentoringId)
+                .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
+
+        if (!request.getLimited().equals(mentoring.getLimited()) & mentoring.getCount() > 0) {
+            throw new BadRequestException("count가 0 이상일 때 limited는 수정될 수 없습니다.");
+        }
+
+        mentoring.update(request);
     }
 }

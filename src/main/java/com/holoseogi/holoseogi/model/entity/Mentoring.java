@@ -1,5 +1,6 @@
 package com.holoseogi.holoseogi.model.entity;
 
+import com.holoseogi.holoseogi.model.request.UpdateMentoringReq;
 import com.holoseogi.holoseogi.type.MentoringCate;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,5 +53,11 @@ public class Mentoring extends BaseEntity{
         this.mentor = mentor;
     }
 
+    public void update(UpdateMentoringReq updateMentoringReq) {
+        this.title = updateMentoringReq.getTitle();
+        this.category = MentoringCate.findByLabel(updateMentoringReq.getCategory());
+        this.description = updateMentoringReq.getDescription();
+        this.limited = updateMentoringReq.getLimited();
+    }
 }
 

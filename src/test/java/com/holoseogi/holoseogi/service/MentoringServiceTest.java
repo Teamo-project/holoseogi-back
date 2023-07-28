@@ -1,5 +1,9 @@
 package com.holoseogi.holoseogi.service;
 
+import com.holoseogi.holoseogi.exception.BadRequestException;
+import com.holoseogi.holoseogi.model.entity.Mentoring;
+import com.holoseogi.holoseogi.model.request.UpdateMentoringReq;
+import com.holoseogi.holoseogi.type.MentoringCate;
 import com.holoseogi.holoseogi.type.UserRole;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.CreateMentoringReq;
@@ -7,10 +11,7 @@ import com.holoseogi.holoseogi.model.response.MentoringDetailResp;
 import com.holoseogi.holoseogi.repository.MentoringRepository;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -30,6 +33,7 @@ class MentoringServiceTest {
     @Autowired private UserRepository userRepository;
     @Autowired private MentoringRepository mentoringRepository;
     @Autowired private MentoringService mentoringService;
+    @PersistenceContext private EntityManager em;
 
     private User loginUser;
 
@@ -87,7 +91,68 @@ class MentoringServiceTest {
         assertThat(response.getMentorInfo().getName()).isEqualTo(loginUser.getName());
         assertThat(response.getMentorInfo().getEmail()).isEqualTo(loginUser.getEmail());
     }
-    
+
+    @Test
+    @DisplayName("멘토링 게시글을 수정할 수 있다.")
+    public void updateMentoringDetail() throws Exception {
+        // given
+        Mentoring before = Mentoring.builder()
+                .title("법률 멘토링 모집")
+                .description("필수적으로 알아둬야하는 법률 사항에 대한 멘토링")
+                .limited(5)
+                .category(MentoringCate.findByLabel("법률"))
+                .mentor(loginUser)
+                .isReceipt(true)
+                .count(0)
+                .build();
+        mentoringRepository.save(before);
+        UpdateMentoringReq updateReq = UpdateMentoringReq.builder()
+                .title("수정된 제목")
+                .description("수정된 내용")
+                .category("상담")
+                .limited(10)
+                .build();
+        em.clear();
+
+        // when
+        mentoringService.updateMentoringDetail(before.getId(), updateReq);
+
+        // then
+        Mentoring mentoring = mentoringRepository.findById(before.getId()).get();
+        assertThat(mentoring.getTitle()).isEqualTo(updateReq.getTitle());
+        assertThat(mentoring.getDescription()).isEqualTo(updateReq.getDescription());
+        assertThat(mentoring.getCategory()).isEqualTo(MentoringCate.findByLabel(updateReq.getCategory()));
+        assertThat(mentoring.getLimited()).isEqualTo(updateReq.getLimited());
+    }
+
+    @Test
+    @DisplayName("count가 0이상일 경우 수정이 불가능하며 400 에러가 발생한다.")
+    public void cantUpdateMentoringDetail() throws Exception {
+        // given
+        Mentoring before = Mentoring.builder()
+                .title("법률 멘토링 모집")
+                .description("필수적으로 알아둬야하는 법률 사항에 대한 멘토링")
+                .limited(5)
+                .category(MentoringCate.findByLabel("법률"))
+                .mentor(loginUser)
+                .isReceipt(true)
+                .count(1) //
+                .build();
+        mentoringRepository.save(before);
+        UpdateMentoringReq updateReq = UpdateMentoringReq.builder()
+                .title("수정된 제목")
+                .description("수정된 내용")
+                .category("상담")
+                .limited(10)
+                .build();
+        em.clear();
+
+        // when & then
+        Assertions.assertThrows(BadRequestException.class, () ->{
+            mentoringService.updateMentoringDetail(before.getId(), updateReq);
+        });
+    }
+
     private void authorize() {
         loginUser = userRepository.findByEmail("admin@gmail.com").get();
         Collection<? extends GrantedAuthority> authorities =
