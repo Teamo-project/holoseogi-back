@@ -1,7 +1,7 @@
 package com.holoseogi.holoseogi.init;
 
-import com.holoseogi.holoseogi.common.AuthProvider;
-import com.holoseogi.holoseogi.common.UserRole;
+import com.holoseogi.holoseogi.type.AuthProvider;
+import com.holoseogi.holoseogi.type.UserRole;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

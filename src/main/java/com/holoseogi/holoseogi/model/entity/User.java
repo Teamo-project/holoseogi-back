@@ -1,16 +1,15 @@
 package com.holoseogi.holoseogi.model.entity;
 
-import com.holoseogi.holoseogi.common.AuthProvider;
-import com.holoseogi.holoseogi.common.UserRole;
+import com.holoseogi.holoseogi.type.AuthProvider;
+import com.holoseogi.holoseogi.type.UserRole;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-@ToString
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "USER_TABLE")
 public class User extends BaseEntity {
@@ -35,4 +34,17 @@ public class User extends BaseEntity {
     private AuthProvider authProvider;
 
     private String refreshToken;
+
+    @OneToMany(mappedBy = "mentor")
+    private List<Mentoring> mentorings = new ArrayList<>();
+
+    @Builder
+    public User(String email, String name, String img, UserRole role, AuthProvider authProvider, String refreshToken) {
+        this.email = email;
+        this.name = name;
+        this.img = img;
+        this.role = role;
+        this.authProvider = authProvider;
+        this.refreshToken = refreshToken;
+    }
 }
