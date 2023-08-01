@@ -61,4 +61,11 @@ public class MentoringService {
                         MentoringCate.findByLabel(search.getCategory()))
                 .map(MentoringListResp::new);
     }
+
+    @Transactional
+    public void finishedReceipt(Long mentoringId) {
+        Mentoring mentoring = mentoringRepository.findById(mentoringId)
+                .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
+        mentoring.changeReceiptToFalse();
+    }
 }

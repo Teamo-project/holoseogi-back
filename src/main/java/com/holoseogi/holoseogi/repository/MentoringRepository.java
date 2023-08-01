@@ -11,4 +11,5 @@ public interface MentoringRepository extends JpaRepository<Mentoring, Long> {
 
     @Query("select m from Mentoring m where m.title like %:title% and (:category is null or m.category = :category)")
     Page<Mentoring> searchMentorings(Pageable pageable, String title, MentoringCate category);
+
 }

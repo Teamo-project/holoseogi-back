@@ -25,6 +25,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -175,6 +176,7 @@ class MentoringControllerTest {
     }
 
     @Test
+    @DisplayName("GET v1/mentoring/list 요청시 mentoring 게시글을 검색해서 페이지별로 볼 수 있다.")
     public void getMentorings() throws Exception {
         // given
         List<Mentoring> mentorings_raw = IntStream.rangeClosed(1, 10)
@@ -207,6 +209,28 @@ class MentoringControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()", Matchers.is(5)))
                 .andExpect(jsonPath("$.content[0].category").value("법률"));
+    }
+
+    @Test
+    @DisplayName("PATCH /v1/mentoring/{mentoringId}/receipt mentoring의 접수 상태를 변경한다.")
+    public void finishedReceipt() throws Exception {
+        // given
+        Mentoring save = Mentoring.builder()
+                .title("법률 멘토링 모집")
+                .description("필수적으로 알아둬야하는 법률 사항에 대한 멘토링")
+                .limited(5)
+                .count(3)
+                .category(MentoringCate.findByLabel("법률"))
+                .mentor(loginUser)
+                .build();
+        mentoringRepository.save(save);
+
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.patch("/v1/mentoring/" + save.getId() + "/receipt")
+                        .header("Authorization", "Bearer debug")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     private void authorize() {

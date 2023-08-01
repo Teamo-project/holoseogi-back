@@ -59,5 +59,9 @@ public class Mentoring extends BaseEntity{
         this.description = updateMentoringReq.getDescription();
         this.limited = updateMentoringReq.getLimited();
     }
+
+    public void changeReceiptToFalse() {
+        this.isReceipt = false;
+    }
 }
 

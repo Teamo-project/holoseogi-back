@@ -51,4 +51,10 @@ public class MentoringController {
 
         return ResponseEntity.ok(mentoringService.getMentorings(pageable, search));
     }
+
+    @PatchMapping("/{mentoringId}/receipt")
+    public ResponseEntity<MentoringDetailResp> finishedReceipt(@PathVariable("mentoringId") Long mentoringId) {
+        mentoringService.finishedReceipt(mentoringId);
+        return ResponseEntity.ok(mentoringService.getMentoringById(mentoringId));
+    }
 }

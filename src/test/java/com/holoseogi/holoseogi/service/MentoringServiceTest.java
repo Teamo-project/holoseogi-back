@@ -272,6 +272,30 @@ class MentoringServiceTest {
         assertThat(response.getContent().size()).isEqualTo(5);
     }
 
+    @Test
+    @DisplayName("mentoring 게시글의 접수 상태를 변경한다.")
+    public void finishedReceipt() throws Exception {
+        // given
+        Mentoring mentoring = Mentoring.builder()
+                .title("법률 멘토링 모집")
+                .description("필수적으로 알아둬야하는 법률 사항에 대한 멘토링")
+                .limited(5)
+                .category(MentoringCate.findByLabel("법률"))
+                .mentor(loginUser)
+                .isReceipt(true)
+                .count(1) //
+                .build();
+        mentoringRepository.save(mentoring);
+        em.clear();
+
+        // when
+        mentoringService.finishedReceipt(mentoring.getId());
+        em.clear();
+
+        // then
+        assertThat(mentoringService.getMentoringById(mentoring.getId()).getIsReceipt()).isFalse();
+    }
+
     private void authorize() {
         loginUser = userRepository.findByEmail("admin@gmail.com").get();
         Collection<? extends GrantedAuthority> authorities =
