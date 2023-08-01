@@ -296,6 +296,24 @@ class MentoringServiceTest {
         assertThat(mentoringService.getMentoringById(mentoring.getId()).getIsReceipt()).isFalse();
     }
 
+    @Test
+    @DisplayName("count가 0이상일 때는 400에러를 발생시키며 삭제할 수 없다.")
+    public void deleteMentoring() throws Exception {
+        // given
+        Mentoring mentoring = Mentoring.builder()
+                .title("법률 멘토링 모집")
+                .description("필수적으로 알아둬야하는 법률 사항에 대한 멘토링")
+                .limited(5)
+                .category(MentoringCate.findByLabel("법률"))
+                .mentor(loginUser)
+                .isReceipt(true)
+                .count(1) //
+                .build();
+        mentoringRepository.save(mentoring);
+        // when & then
+        Assertions.assertThrows(BadRequestException.class, () -> mentoringService.deleteMentoring(mentoring.getId()));
+    }
+
     private void authorize() {
         loginUser = userRepository.findByEmail("admin@gmail.com").get();
         Collection<? extends GrantedAuthority> authorities =

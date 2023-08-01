@@ -24,14 +24,7 @@ public class MentoringService {
 
     @Transactional
     public Long createMentoring(CreateMentoringReq request) {
-        Mentoring createMentoring = Mentoring.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .limited(request.getLimited())
-                .category(MentoringCate.findByLabel(request.getCategory()))
-                .mentor(userService.getLoginUser())
-                .build();
-
+        Mentoring createMentoring = request.toEntity(userService.getLoginUser());
         return mentoringRepository.save(createMentoring).getId();
     }
 
@@ -67,5 +60,15 @@ public class MentoringService {
         Mentoring mentoring = mentoringRepository.findById(mentoringId)
                 .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
         mentoring.changeReceiptToFalse();
+    }
+
+    @Transactional
+    public void deleteMentoring(Long mentoringId) {
+        Mentoring mentoring = mentoringRepository.findById(mentoringId)
+                .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
+        if (mentoring.getCount() != 0) {
+            throw new BadRequestException("count가 0이상인 객체는 삭제할 수 없습니다.");
+        }
+        mentoringRepository.deleteById(mentoringId);
     }
 }

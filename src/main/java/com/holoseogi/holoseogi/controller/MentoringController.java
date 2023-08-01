@@ -57,4 +57,9 @@ public class MentoringController {
         mentoringService.finishedReceipt(mentoringId);
         return ResponseEntity.ok(mentoringService.getMentoringById(mentoringId));
     }
+
+    @DeleteMapping("/{mentoringId}")
+    public void deleteMentoring(@PathVariable("mentoringId") Long mentoringId) {
+        mentoringService.deleteMentoring(mentoringId);
+    }
 }
