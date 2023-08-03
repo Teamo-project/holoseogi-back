@@ -14,7 +14,7 @@ public class Board extends BaseEntity{
     //필드
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "board_id")
+    @Column(name = "posting_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
