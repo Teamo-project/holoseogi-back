@@ -20,19 +20,19 @@ public class BoardController {
         return boardService.create(requestDto);
     }
 
-    @PutMapping("/v1/posting/{posting_id}")
-    public Long update(@PathVariable Long id, @RequestBody BoardUpdateRequestDto requestDto) {
+    @PutMapping("/{postingId}")
+    public Long update(@PathVariable("postingId") Long id, @RequestBody BoardUpdateRequestDto requestDto) {
         return boardService.update(id, requestDto);
     }
 
     //상세 조회
-    @GetMapping("/v1/posting/{posting_id}")
-    public BoardResponseDto searchById(@PathVariable Long id) {
+    @GetMapping("/{postingId}")
+    public BoardResponseDto searchById(@PathVariable("postingId") Long id) {
         return boardService.searchById(id);
     }
 
     //조건에 맞는 게시글 조회(목록)
-    @GetMapping("/v1/posting/list?title={}&content={}")
+    @GetMapping("/list?title={}&content={}")
     public List<BoardListResponseDto> searchAllDesc() {
         return boardService.searchAllDesc();
     }
