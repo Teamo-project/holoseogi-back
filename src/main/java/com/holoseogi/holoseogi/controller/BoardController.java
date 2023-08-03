@@ -25,14 +25,15 @@ public class BoardController {
         return boardService.update(id, requestDto);
     }
 
-    //상세 조회
+    //개별 조회
     @GetMapping("/{postingId}")
     public BoardResponseDto searchById(@PathVariable("postingId") Long id) {
         return boardService.searchById(id);
     }
 
-    //조건에 맞는 게시글 조회(목록)
-    @GetMapping("/list?title={}&content={}") // 수정
+    //전체 조회
+    //@RequestMapping(value = "/v1/posting", method = RequestMethod.POST)
+    @GetMapping("/list") // 전체 조회
     public List<BoardListResponseDto> searchAllDesc() {
         return boardService.searchAllDesc();
     }

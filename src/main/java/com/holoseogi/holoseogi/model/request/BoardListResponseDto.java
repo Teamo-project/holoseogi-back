@@ -7,9 +7,13 @@ import lombok.Getter;
 public class BoardListResponseDto {
 
     private String title;
+    private String content;
+    private String category;
 
     public BoardListResponseDto(Board entity) {
 
         this.title = entity.getTitle();
+        this.content = entity.getContent();
+        this.category = entity.getCategory();
     }
 }
