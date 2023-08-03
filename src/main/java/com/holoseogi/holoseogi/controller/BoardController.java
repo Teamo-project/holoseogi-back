@@ -32,7 +32,7 @@ public class BoardController {
     }
 
     //조건에 맞는 게시글 조회(목록)
-    @GetMapping("/list?title={}&content={}")
+    @GetMapping("/list?title={}&content={}") // 수정
     public List<BoardListResponseDto> searchAllDesc() {
         return boardService.searchAllDesc();
     }
