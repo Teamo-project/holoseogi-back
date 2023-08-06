@@ -22,4 +22,8 @@ public class MenteeController {
         return ResponseEntity.ok(menteeService.getApplyMenteeDtoById(applyMenteeId));
     }
 
+    @GetMapping("/{applyMenteeId}")
+    public ResponseEntity<ApplyMenteeInfoResp> getMenteeInfo(@PathVariable("applyMenteeId") Long applyMenteeId) {
+        return ResponseEntity.ok(menteeService.getApplyMenteeDtoById(applyMenteeId));
+    }
 }

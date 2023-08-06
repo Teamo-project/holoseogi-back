@@ -1,6 +1,7 @@
 package com.holoseogi.holoseogi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.holoseogi.holoseogi.model.entity.ApplyMentee;
 import com.holoseogi.holoseogi.model.entity.Mentoring;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.CreateApplyMenteeReq;
@@ -71,7 +72,6 @@ class MenteeControllerTest {
     public void applyMentee() throws Exception {
         // given
         CreateApplyMenteeReq requestDto = new CreateApplyMenteeReq("멘토링신청합니다.");
-        Long saveMenteeId;
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.post("/v1/mentee/{mentoringId}", mentoring.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -86,6 +86,29 @@ class MenteeControllerTest {
 
         Mentoring after = mentoringRepository.findById(mentoring.getId()).get();
         assertThat(after.getCount()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("GET /v1/mentee/{applyMenteeId} 요청시 멘티 신청 정보를 가져온다.")
+    public void getMenteeInfoTest() throws Exception {
+        // given
+        ApplyMentee save = ApplyMentee.builder()
+                .description("멘토링신청합니다.")
+                .applicant(loginUser)
+                .mentoring(mentoring)
+                .build();
+        menteeRepository.save(save);
+
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/mentee/{applyMenteeId}", save.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken)
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.description").value(save.getDescription()))
+                .andExpect(jsonPath("$.mentoringId").value(mentoring.getId()))
+                .andExpect(jsonPath("$.mentoringTitle").value(mentoring.getTitle()))
+                .andExpect(jsonPath("$.applicantId").value(loginUser.getId()))
+                .andExpect(jsonPath("$.applicantEmail").value(loginUser.getEmail()));
     }
 
     private void createMentoring() {
