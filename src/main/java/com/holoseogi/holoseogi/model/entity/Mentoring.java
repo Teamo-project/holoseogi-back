@@ -9,6 +9,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @DynamicInsert
 @Getter
@@ -42,6 +44,9 @@ public class Mentoring extends BaseEntity{
     @JoinColumn(name = "mentor_id")
     private User mentor;
 
+    @OneToMany(mappedBy = "mentoring", cascade = CascadeType.REMOVE)
+    List<ApplyMentee> mentees = new ArrayList<>();
+
     @Builder
     public Mentoring(String title, String description, Integer limited, MentoringCate category, Integer count, Boolean isReceipt, User mentor) {
         this.title = title;
@@ -62,6 +67,11 @@ public class Mentoring extends BaseEntity{
 
     public void changeReceiptToFalse() {
         this.isReceipt = false;
+    }
+
+    public void applyMentoring() {
+        count += 1;
+        if(count == limited) changeReceiptToFalse();
     }
 }
 
