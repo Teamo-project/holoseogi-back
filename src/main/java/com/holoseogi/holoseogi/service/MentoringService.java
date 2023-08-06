@@ -29,7 +29,7 @@ public class MentoringService {
     }
 
     @Transactional(readOnly = true)
-    public MentoringDetailResp getMentoringById(Long mentoringId) {
+    public MentoringDetailResp getMentoringDtoById(Long mentoringId) {
         Mentoring mentoring = mentoringRepository.findById(mentoringId)
                 .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
         return new MentoringDetailResp(mentoring);
@@ -48,7 +48,7 @@ public class MentoringService {
     }
 
     @Transactional(readOnly = true)
-    public Page<MentoringListResp> getMentorings(Pageable pageable, SearchMentoring search) {
+    public Page<MentoringListResp> getMentoringsDto(Pageable pageable, SearchMentoring search) {
         return mentoringRepository.searchMentorings(pageable,
                         search.getTitle(),
                         MentoringCate.findByLabel(search.getCategory()))
@@ -70,5 +70,11 @@ public class MentoringService {
             throw new BadRequestException("count가 0이상인 객체는 삭제할 수 없습니다.");
         }
         mentoringRepository.deleteById(mentoringId);
+    }
+
+    @Transactional(readOnly = true)
+    public Mentoring getMentoringById(Long mentoringId) {
+        return mentoringRepository.findById(mentoringId)
+                .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
     }
 }
