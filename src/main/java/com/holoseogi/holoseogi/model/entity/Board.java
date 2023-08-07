@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "board")
+@Table(name = "board_table")
 public class Board extends BaseEntity{
     //필드
     @Id

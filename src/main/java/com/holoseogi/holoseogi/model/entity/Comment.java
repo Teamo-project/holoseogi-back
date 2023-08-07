@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "comment")
+@Table(name = "comment_table")
 public class Comment extends BaseEntity {
 
     @Id
