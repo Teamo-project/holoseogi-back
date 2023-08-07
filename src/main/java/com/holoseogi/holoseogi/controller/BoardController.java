@@ -26,7 +26,7 @@ public class BoardController {
     }
 
     //개별 조회
-    @GetMapping("/{postingId}")
+    @GetMapping("/detail/{postingId}")
     public BoardResponseDto searchById(@PathVariable("postingId") Long id) {
         return boardService.searchById(id);
     }
@@ -40,8 +40,8 @@ public class BoardController {
 
 
     @DeleteMapping("/{postingId}")
-    public void delete(@PathVariable Long id){
-        boardService.delete(id);
+    public void deleteBoard(@PathVariable Long id){
+        boardService.deleteBoard(id);
     }
 }
 
