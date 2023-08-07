@@ -12,7 +12,7 @@ public class BoardListResponseDto {
     private String content;
     private String category;
 
-    private LocalDateTime createDate;
+
 
     public BoardListResponseDto(Board entity) {
 
@@ -20,6 +20,5 @@ public class BoardListResponseDto {
         this.content = entity.getContent();
         this.category = entity.getCategory();
 
-        this.createDate = entity.getCreateDate();
     }
 }

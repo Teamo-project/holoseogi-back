@@ -34,12 +34,12 @@ public class Board extends BaseEntity{
 
     //빌더
     @Builder
-    public Board(User user, String title, String content, String category, LocalDateTime createDate) {
+    public Board(User user, String title, String content, String category) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.category = category;
-        this.createDate = createDate;
+
 
     }
 
