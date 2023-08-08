@@ -1,6 +1,7 @@
 package com.holoseogi.holoseogi.security.handler;
 
 import com.holoseogi.holoseogi.exception.BadRequestException;
+import com.holoseogi.holoseogi.security.CustomUserDetails;
 import com.holoseogi.holoseogi.security.jwt.JwtTokenProvider;
 import com.holoseogi.holoseogi.security.oauth.CookieAuthorizationRequestRepository;
 import com.holoseogi.holoseogi.util.CookieUtil;
@@ -53,7 +54,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl()); // url 없으면 localhost:8080으로
 
         // JWT 생성
-        String accessToken = tokenProvider.createAccessToken(authentication);
+        String accessToken = tokenProvider.createAccessToken((CustomUserDetails)authentication.getPrincipal(), authentication.getAuthorities());
         tokenProvider.createRefreshToken(authentication, response);
 
         log.info("Redirect URI = {}", targetUrl);

@@ -68,10 +68,10 @@ class MentoringServiceTest {
                 .build();
 
         // when
-        mentoringService.createMentoring(request);
+        Long mentoringId = mentoringService.createMentoring(request);
 
         // then
-        assertThat(mentoringRepository.count()).isEqualTo(1);
+        assertThat(mentoringRepository.findById(mentoringId).get().getTitle()).isEqualTo(request.getTitle());
     }
 
     @Test
@@ -87,7 +87,7 @@ class MentoringServiceTest {
         Long saveMentoringId = mentoringService.createMentoring(request);
 
         // when
-        MentoringDetailResp response = mentoringService.getMentoringById(saveMentoringId);
+        MentoringDetailResp response = mentoringService.getMentoringDtoById(saveMentoringId);
 
         // then
         assertThat(response.getId()).isEqualTo(saveMentoringId);
@@ -183,7 +183,7 @@ class MentoringServiceTest {
                 .build();
 
         // when
-        Page<MentoringListResp> response = mentoringService.getMentorings(pageable, search);
+        Page<MentoringListResp> response = mentoringService.getMentoringsDto(pageable, search);
 
         // then
         assertThat(response.getContent().size()).isEqualTo(5);
@@ -224,7 +224,7 @@ class MentoringServiceTest {
                 .build();
 
         // when
-        Page<MentoringListResp> response = mentoringService.getMentorings(pageable, search);
+        Page<MentoringListResp> response = mentoringService.getMentoringsDto(pageable, search);
 
         // then
         assertThat(response.getContent().size()).isEqualTo(2);
@@ -266,7 +266,7 @@ class MentoringServiceTest {
                 .build();
 
         // when
-        Page<MentoringListResp> response = mentoringService.getMentorings(pageable, search);
+        Page<MentoringListResp> response = mentoringService.getMentoringsDto(pageable, search);
 
         // then
         assertThat(response.getContent().size()).isEqualTo(5);
@@ -293,7 +293,7 @@ class MentoringServiceTest {
         em.clear();
 
         // then
-        assertThat(mentoringService.getMentoringById(mentoring.getId()).getIsReceipt()).isFalse();
+        assertThat(mentoringService.getMentoringDtoById(mentoring.getId()).getIsReceipt()).isFalse();
     }
 
     @Test

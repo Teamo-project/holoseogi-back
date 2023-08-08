@@ -38,14 +38,12 @@ public class JwtTokenProvider {
         this.COOKIE_REFRESH_TOKEN_KEY = cookieKey;
     }
 
-    public String createAccessToken(Authentication authentication) {
+    public String createAccessToken(CustomUserDetails principal, Collection<? extends GrantedAuthority> authorities) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
 
-        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-
-        String userId = user.getName();
-        String role = authentication.getAuthorities().stream()
+        String userId = principal.getName();
+        String role = authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -49,7 +48,7 @@ public class AuthService {
         }
 
         // 4. JWT 갱신
-        String accessToken = tokenProvider.createAccessToken(authentication);
+        String accessToken = tokenProvider.createAccessToken((CustomUserDetails)authentication.getPrincipal(), authentication.getAuthorities());
         tokenProvider.createRefreshToken(authentication, response);
 
         return accessToken;
