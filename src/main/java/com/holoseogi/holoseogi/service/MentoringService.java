@@ -56,6 +56,12 @@ public class MentoringService {
                 .map(MentoringListResp::new);
     }
 
+    @Transactional(readOnly = true)
+    public Page<MentoringListResp> getMyMentoringList(Pageable pageable) {
+        return mentoringRepository.getMyMentorings(pageable, userService.getLoginUser())
+                .map(MentoringListResp::new);
+    }
+
     @Transactional
     public void finishedReceipt(Long mentoringId) {
         Mentoring mentoring = mentoringRepository.findById(mentoringId)

@@ -62,4 +62,13 @@ public class MentoringController {
     public void deleteMentoring(@PathVariable("mentoringId") Long mentoringId) {
         mentoringService.deleteMentoring(mentoringId);
     }
+
+    @GetMapping("/my")
+    public ResponseEntity<Page<MentoringListResp>> myMentoringList(@PageableDefault(
+            size = 10,
+            sort = "createDate",
+            direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return ResponseEntity.ok(mentoringService.getMyMentoringList(pageable));
+    }
 }
