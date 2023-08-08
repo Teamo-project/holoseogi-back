@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @ToString
@@ -22,6 +23,7 @@ public class MentoringDetailResp {
     private Integer count;
     private Boolean isReceipt;
     private MentorInfo mentorInfo;
+    private LocalDateTime createDate;
 
     public MentoringDetailResp(Mentoring mentoring) {
         this.id = mentoring.getId();
@@ -32,6 +34,7 @@ public class MentoringDetailResp {
         this.count = (Objects.isNull(mentoring.getCount()))? 0 : mentoring.getCount();
         this.isReceipt = (Objects.isNull(mentoring.getIsReceipt()))? true : mentoring.getIsReceipt();
         this.mentorInfo = new MentorInfo(mentoring.getMentor());
+        this.createDate = mentoring.getCreateDate();
     }
 
     @ToString
