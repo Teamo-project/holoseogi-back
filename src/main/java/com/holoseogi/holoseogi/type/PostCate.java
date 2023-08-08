@@ -17,6 +17,11 @@ public enum PostCate {
 
     private static final Map<String, PostCate> BY_LABEL = new HashMap<>();
 
+    static {
+        for(PostCate cate : values())
+            BY_LABEL.put(cate.label, cate);
+    }
+
     public static PostCate findByLabel(String label) {
         return BY_LABEL.getOrDefault(label, null);
     }
