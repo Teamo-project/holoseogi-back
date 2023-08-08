@@ -1,16 +1,21 @@
 package com.holoseogi.holoseogi.init;
 
 import com.holoseogi.holoseogi.model.entity.Mentoring;
+import com.holoseogi.holoseogi.model.entity.Post;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.repository.MentoringRepository;
+import com.holoseogi.holoseogi.repository.PostRepository;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.type.AuthProvider;
 import com.holoseogi.holoseogi.type.MentoringCate;
+import com.holoseogi.holoseogi.type.PostCate;
 import com.holoseogi.holoseogi.type.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Component
@@ -19,12 +24,16 @@ public class TestInit {
 
     private final UserRepository userRepository;
     private final MentoringRepository mentoringRepository;
+    private final PostRepository postRepository;
+    private User adminUser;
 
     @PostConstruct
     public void init() {
         createDebugUser(); // AdminUser 생성
+        getAdminUser(); // 전역변수에 adminUser넣어두기
         createUsers(); // 일반 유저 생성
         createMentorings(); // 멘토링 글 생성
+        createPostings(); // 게시글 생성
     }
 
     private void createDebugUser() {
@@ -39,26 +48,43 @@ public class TestInit {
     }
 
     private void createUsers() {
-        IntStream.rangeClosed(1, 10).mapToObj(i -> User.builder()
+        List<User> users = IntStream.rangeClosed(1, 10).mapToObj(i -> User.builder()
                         .name("user" + i)
                         .role(UserRole.USER)
                         .email("user" + i + "@gmail.com")
                         .img("https://lh3.googleusercontent.com/a/AAcHTtexYsEPgy_IbUzA79tynRDUjzCgfabVWcyoBoJsM5R5=s96-c")
                         .authProvider(AuthProvider.GOOGLE)
                         .build())
-                .forEach(user -> userRepository.save(user));
+                .collect(Collectors.toList());
+        userRepository.saveAll(users);
     }
 
     private void createMentorings() {
-        IntStream.rangeClosed(1, 5).mapToObj(i -> Mentoring.builder()
+        List<Mentoring> mentorings = IntStream.rangeClosed(1, 5).mapToObj(i -> Mentoring.builder()
                         .title("멘토링 모집")
                         .description("학교생활 상담 멘티들을 모집합니다.")
-                        .mentor(userRepository.findByEmail("admin@gmail.com").get())
+                        .mentor(adminUser)
                         .category(MentoringCate.COUNCEL)
                         .count(0)
                         .isReceipt(true)
                         .limited(5)
                         .build())
-                .forEach(mentoring -> mentoringRepository.save(mentoring));
+                .collect(Collectors.toList());
+        mentoringRepository.saveAll(mentorings);
+    }
+
+    private void createPostings() {
+        List<Post> postings = IntStream.rangeClosed(1, 20).mapToObj(i -> Post.builder()
+                        .title("게시글 제목")
+                        .content("게시글 내용")
+                        .creator(adminUser)
+                        .category(PostCate.FREE)
+                        .build())
+                .collect(Collectors.toList());
+        postRepository.saveAll(postings);
+    }
+
+    private void getAdminUser() {
+        adminUser = userRepository.findByEmail("admin@gmail.com").get();
     }
 }
