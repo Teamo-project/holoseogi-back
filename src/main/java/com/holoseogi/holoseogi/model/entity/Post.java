@@ -1,5 +1,6 @@
 package com.holoseogi.holoseogi.model.entity;
 
+import com.holoseogi.holoseogi.model.request.UpdatePostReq;
 import com.holoseogi.holoseogi.type.PostCate;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,5 +36,11 @@ public class Post extends BaseEntity{
         this.content = content;
         this.category = category;
         this.creator = creator;
+    }
+
+    public void update(UpdatePostReq requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.category = PostCate.findByLabel(requestDto.getCategory());
     }
 }

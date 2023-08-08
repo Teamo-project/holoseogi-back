@@ -2,6 +2,7 @@ package com.holoseogi.holoseogi.controller;
 
 import com.holoseogi.holoseogi.model.request.CreatePostReq;
 import com.holoseogi.holoseogi.model.request.SearchPost;
+import com.holoseogi.holoseogi.model.request.UpdatePostReq;
 import com.holoseogi.holoseogi.model.response.PostDetailResp;
 import com.holoseogi.holoseogi.model.response.PostListResp;
 import com.holoseogi.holoseogi.service.PostService;
@@ -27,8 +28,8 @@ public class PostController {
         postService.createPost(requestDto);
     }
 
-    @GetMapping("/{posting_id}")
-    public ResponseEntity<PostDetailResp> getPostDetail(@PathVariable("posting_id") Long postId) {
+    @GetMapping("/{postingId}")
+    public ResponseEntity<PostDetailResp> getPostDetail(@PathVariable("postingId") Long postId) {
         return ResponseEntity.ok(postService.getPostDtoById(postId));
     }
 
@@ -38,5 +39,15 @@ public class PostController {
             sort = "createDate",
             direction = Sort.Direction.DESC) Pageable pageable, SearchPost searchPost) {
         return ResponseEntity.ok(postService.getPostsDto(pageable, searchPost));
+    }
+
+    @PutMapping("/{postingId}")
+    public void updateBoard(@PathVariable("postingId") Long postId, @RequestBody UpdatePostReq requestDto) {
+        postService.updatePostDetail(postId, requestDto);
+    }
+
+    @DeleteMapping("/{postingId}")
+    public void deleteBoard(@PathVariable("postingId") Long postId) {
+        postService.deletePost(postId);
     }
 }

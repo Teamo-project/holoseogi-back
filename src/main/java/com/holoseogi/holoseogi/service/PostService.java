@@ -1,8 +1,10 @@
 package com.holoseogi.holoseogi.service;
 
+import com.holoseogi.holoseogi.exception.BadRequestException;
 import com.holoseogi.holoseogi.model.entity.Post;
 import com.holoseogi.holoseogi.model.request.CreatePostReq;
 import com.holoseogi.holoseogi.model.request.SearchPost;
+import com.holoseogi.holoseogi.model.request.UpdatePostReq;
 import com.holoseogi.holoseogi.model.response.PostDetailResp;
 import com.holoseogi.holoseogi.model.response.PostListResp;
 import com.holoseogi.holoseogi.repository.PostRepository;
@@ -42,5 +44,20 @@ public class PostService {
                         , PostCate.findByLabel(search.getCategory()))
                 .map(PostListResp::new);
 
+    }
+
+    @Transactional
+    public void updatePostDetail(Long postId, UpdatePostReq requestDto) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
+        post.update(requestDto);
+    }
+
+    @Transactional
+    public void deletePost(Long postId) {
+        if (!postRepository.existsById(postId)) {
+            throw new RuntimeException("객체를 찾을 수 없습니다.");
+        }
+        postRepository.deleteById(postId);
     }
 }
