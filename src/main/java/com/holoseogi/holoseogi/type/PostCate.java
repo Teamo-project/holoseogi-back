@@ -11,7 +11,9 @@ import java.util.Map;
 public enum PostCate {
 
     INFO("정보"),
-    FREE("자유");
+    FREE("자유"),
+    Question("질문"),
+    JOB("구인구직");
 
     private String label;
 
