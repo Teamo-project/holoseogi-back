@@ -33,7 +33,7 @@ public class ReplyController {
         return ResponseEntity.ok(reply);
     }
 
-    @GetMapping("/list")
+    @GetMapping("/{postId}/list")
     public ResponseEntity<Page<ReplyListResp>> getReplies(
             @PageableDefault(
                     size = 6,

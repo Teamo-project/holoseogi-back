@@ -6,8 +6,8 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Getter
 @ToString
+@Getter
 public class ReplyListResp {
 
     private Long id;
