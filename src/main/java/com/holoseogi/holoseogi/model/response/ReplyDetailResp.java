@@ -6,14 +6,14 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class ReplyResp {
+public class ReplyDetailResp {
     private Long id;
     private String content;
     private LocalDateTime createDate;
     private Long postId;
     private Long creatorId;
 
-    public ReplyResp(Reply reply) {
+    public ReplyDetailResp(Reply reply) {
         this.id = reply.getId();
         this.content = reply.getContent();
         this.createDate = reply.getCreateDate();
