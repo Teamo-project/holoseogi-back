@@ -45,6 +45,7 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     //    runtimeOnly 'com.h2database:h2' // test DB
     annotationProcessor 'org.projectlombok:lombok'
