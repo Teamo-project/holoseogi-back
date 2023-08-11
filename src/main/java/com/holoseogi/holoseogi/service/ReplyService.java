@@ -4,7 +4,6 @@ import com.holoseogi.holoseogi.model.entity.Reply;
 import com.holoseogi.holoseogi.model.entity.Post;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.CreateReplyReq;
-import com.holoseogi.holoseogi.model.request.SearchPost;
 import com.holoseogi.holoseogi.model.request.SearchReply;
 import com.holoseogi.holoseogi.model.request.UpdateReplyReq;
 import com.holoseogi.holoseogi.model.response.ReplyDetailResp;
