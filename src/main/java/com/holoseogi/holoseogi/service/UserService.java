@@ -1,6 +1,7 @@
 package com.holoseogi.holoseogi.service;
 
 import com.holoseogi.holoseogi.model.entity.User;
+import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.Optional;
 
 @Slf4j
@@ -19,9 +21,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
+    private static final String AUTH_CODE_PREFIX = "AuthCode ";
     private final UserRepository userRepository;
     private final MailService mailService;
-
+    private final RedisService redisService;
+    @Value("${spring.mail.auth-code-expiration-millis}")
+    private long authCodeExpirationMillis;
     @Transactional
     public User getLoginUser() {
         return userRepository.findById(getLoginUserId()).orElseThrow(() -> new RuntimeException("로그인 ID에 맞는 유저가 저장되어있찌 않습니다"));
@@ -35,9 +40,11 @@ public class UserService {
     public void sendCodeToEmail(String toEmail) {
         this.checkDuplicatedEmail(toEmail);
         String title = "HOLO 이메일 인증 번호";
-        String authCode = "인증코드를 입력해주세요 \n\n" + this.createCode();
-        mailService.sendEmail(toEmail, title, authCode);
-        // todo: 이메일 인증 요청시 인증번호 저장(key = "AuthCode " + Email / Value = Authcode)
+        String authCode = this.createCode();
+        String content = "인증코드를 입력해주세요 \n\n" + authCode;
+        mailService.sendEmail(toEmail, title, content);
+        redisService.setValues(AUTH_CODE_PREFIX + toEmail,
+                authCode, Duration.ofMillis(this.authCodeExpirationMillis));
     }
 
     private void checkDuplicatedEmail(String email) {
@@ -62,4 +69,14 @@ public class UserService {
     }
 
 
+    public EmailVerificationResult verifiedCode(String email, String authCode) {
+        this.checkDuplicatedEmail(email);
+        String redisAuthCode = redisService.getValues(AUTH_CODE_PREFIX + email);
+        boolean authResult = redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode);
+
+        log.info("redisService.checkExistsValue(redisAuthCode) = {}", redisService.checkExistsValue(redisAuthCode));
+        log.info("redisAuthCode.equal = {}", redisAuthCode.equals(authCode));
+        log.info("authcode = {}, redisAuthCode = {}", authCode, redisAuthCode);
+        return new EmailVerificationResult(authResult);
+    }
 }
