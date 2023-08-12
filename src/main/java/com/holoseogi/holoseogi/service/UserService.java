@@ -2,20 +2,30 @@ package com.holoseogi.holoseogi.service;
 
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.CreateUserReq;
+import com.holoseogi.holoseogi.model.request.UserLoginReq;
 import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
+import com.holoseogi.holoseogi.model.response.LoginTokenResp;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
+import com.holoseogi.holoseogi.security.jwt.JwtTokenProvider;
+import com.holoseogi.holoseogi.type.AuthProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,6 +36,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final MailService mailService;
     private final RedisService redisService;
+    private final JwtTokenProvider tokenProvider;
+    private final PasswordEncoder passwordEncoder;
+
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
 
@@ -33,7 +46,30 @@ public class UserService {
     public void joinGeneralUser(CreateUserReq dto) {
         userRepository.findByEmail(dto.getEmail())
                 .ifPresent(user -> new RuntimeException("이미 " + user.getEmail() + "의 이메일이 존재합니다."));
-        userRepository.save(dto.toEntity());
+        userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword())));
+    }
+
+    @Transactional
+    public LoginTokenResp loginGeneralUser(UserLoginReq dto) {
+        User user = userRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+        if (!user.getAuthProvider().equals(AuthProvider.GENERAL)) {
+            throw new RuntimeException("일반 유저가 아닙니다");
+        }
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new RuntimeException("패스워드가 틀립니다.");
+        }
+
+        return new LoginTokenResp(this.createAccessTokenByUser(user));
+    }
+
+    private String createAccessTokenByUser(User user) {
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(user.getRole().getRole().split(","))
+                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+
+        CustomUserDetails principal = new CustomUserDetails(user.getId(), "", authorities);
+        return tokenProvider.createAccessToken(principal, authorities);
     }
 
     @Transactional

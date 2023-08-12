@@ -1,7 +1,9 @@
 package com.holoseogi.holoseogi.controller;
 
 import com.holoseogi.holoseogi.model.request.CreateUserReq;
+import com.holoseogi.holoseogi.model.request.UserLoginReq;
 import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
+import com.holoseogi.holoseogi.model.response.LoginTokenResp;
 import com.holoseogi.holoseogi.model.response.LoginUserResp;
 import com.holoseogi.holoseogi.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -43,4 +45,9 @@ public class UserController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<LoginTokenResp> login(@RequestBody UserLoginReq dto) {
+        LoginTokenResp LoginToken = userService.loginGeneralUser(dto);
+        return ResponseEntity.ok(LoginToken);
+    }
 }

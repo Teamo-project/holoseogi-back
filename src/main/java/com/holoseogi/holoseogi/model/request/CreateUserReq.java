@@ -14,10 +14,10 @@ public class CreateUserReq {
     private String name;
     private String role;
 
-    public User toEntity() {
+    public User toEntity(String encodingPassword) {
         return User.builder()
                 .email(email)
-                .password(password)
+                .password(encodingPassword)
                 .name(name)
                 .role(UserRole.findByLabel(role))
                 .authProvider(AuthProvider.GENERAL)
