@@ -1,5 +1,6 @@
 package com.holoseogi.holoseogi.controller;
 
+import com.holoseogi.holoseogi.model.request.CreateUserReq;
 import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
 import com.holoseogi.holoseogi.model.response.LoginUserResp;
 import com.holoseogi.holoseogi.service.UserService;
@@ -35,4 +36,11 @@ public class UserController {
         EmailVerificationResult result = userService.verifiedCode(email, authCode);
         return new ResponseEntity(result, HttpStatus.OK);
     }
+
+    @PostMapping("/join")
+    public ResponseEntity join(@RequestBody CreateUserReq dto) {
+        userService.joinGeneralUser(dto);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 }

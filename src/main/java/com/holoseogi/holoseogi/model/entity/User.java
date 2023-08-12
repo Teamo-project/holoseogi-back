@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @NoArgsConstructor
@@ -22,7 +23,8 @@ public class User extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true)
+    private String password;
+
     private String name;
 
     private String img;
@@ -39,8 +41,9 @@ public class User extends BaseEntity {
     private List<Mentoring> mentorings = new ArrayList<>();
 
     @Builder
-    public User(String email, String name, String img, UserRole role, AuthProvider authProvider, String refreshToken) {
+    public User(String email, String password, String name, String img, UserRole role, AuthProvider authProvider, String refreshToken) {
         this.email = email;
+        this.password = (Objects.isNull(password))? "":password;
         this.name = name;
         this.img = img;
         this.role = role;

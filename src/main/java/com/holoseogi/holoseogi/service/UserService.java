@@ -1,6 +1,7 @@
 package com.holoseogi.holoseogi.service;
 
 import com.holoseogi.holoseogi.model.entity.User;
+import com.holoseogi.holoseogi.model.request.CreateUserReq;
 import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
@@ -27,9 +28,17 @@ public class UserService {
     private final RedisService redisService;
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
+
+    @Transactional
+    public void joinGeneralUser(CreateUserReq dto) {
+        userRepository.findByEmail(dto.getEmail())
+                .ifPresent(user -> new RuntimeException("이미 " + user.getEmail() + "의 이메일이 존재합니다."));
+        userRepository.save(dto.toEntity());
+    }
+
     @Transactional
     public User getLoginUser() {
-        return userRepository.findById(getLoginUserId()).orElseThrow(() -> new RuntimeException("로그인 ID에 맞는 유저가 저장되어있찌 않습니다"));
+        return userRepository.findById(this.getLoginUserId()).orElseThrow(() -> new RuntimeException("로그인 ID에 맞는 유저가 저장되어있찌 않습니다"));
     }
 
     private Long getLoginUserId() {
