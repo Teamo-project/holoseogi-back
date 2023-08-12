@@ -12,6 +12,7 @@ public class PostDetailResp {
     private String content;
     private LocalDateTime createDate;
     private Long creatorId;
+    private String category;
 
     public PostDetailResp(Post post) {
         this.id = post.getId();
@@ -19,5 +20,6 @@ public class PostDetailResp {
         this.content = post.getContent();
         this.createDate = post.getCreateDate();
         this.creatorId = post.getCreator().getId();
+        this.category = post.getCategory().getLabel();
     }
 }

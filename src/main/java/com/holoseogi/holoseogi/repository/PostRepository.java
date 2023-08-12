@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query("select p from Post p join fetch p.creator c where p.id = :postId")
-    Optional<Post> findById(@Param("postId") Long postId);
+        @Query("select p from Post p join fetch p.creator c where p.id = :postId")
+        Optional<Post> findById(@Param("postId") Long postId);
 
     @Query("select p from Post p " +
             "where p.title like %:title% and (:category is null or p.category = :category)")
