@@ -9,6 +9,7 @@ import java.util.Map;
 @Getter
 @RequiredArgsConstructor
 public enum UserRole {
+    BEFORE("ROLE_BEFORE", "before"),
     ADMIN("ROLE_ADMIN", "admin"),
     USER("ROLE_USER", "user");
 

@@ -1,6 +1,8 @@
 package com.holoseogi.holoseogi.model.entity;
 
+import com.holoseogi.holoseogi.model.request.OAuth2JoinPlusUserInfo;
 import com.holoseogi.holoseogi.type.AuthProvider;
+import com.holoseogi.holoseogi.type.UserRegion;
 import com.holoseogi.holoseogi.type.UserRole;
 import lombok.*;
 
@@ -29,6 +31,13 @@ public class User extends BaseEntity {
 
     private String img;
 
+    private Integer phone;
+
+    private Integer age;
+
+    @Enumerated(EnumType.STRING)
+    private UserRegion region;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -49,5 +58,12 @@ public class User extends BaseEntity {
         this.role = role;
         this.authProvider = authProvider;
         this.refreshToken = refreshToken;
+    }
+
+    public void updateOAuth2UserInfo(OAuth2JoinPlusUserInfo dto) {
+        this.phone = dto.getPhone();
+        this.region = UserRegion.findByLabel(dto.getAge());
+        this.age = dto.getPhone();
+        this.role = UserRole.USER;
     }
 }

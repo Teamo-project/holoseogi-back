@@ -2,6 +2,7 @@ package com.holoseogi.holoseogi.service;
 
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.CreateUserReq;
+import com.holoseogi.holoseogi.model.request.OAuth2JoinPlusUserInfo;
 import com.holoseogi.holoseogi.model.request.UserLoginReq;
 import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
 import com.holoseogi.holoseogi.model.response.LoginTokenResp;
@@ -123,5 +124,13 @@ public class UserService {
         log.info("redisAuthCode.equal = {}", redisAuthCode.equals(authCode));
         log.info("authcode = {}, redisAuthCode = {}", authCode, redisAuthCode);
         return new EmailVerificationResult(authResult);
+    }
+
+    @Transactional
+    public void updateOauth2UserInfo(OAuth2JoinPlusUserInfo dto) {
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new RuntimeException("유저 정보가 존재하지 않습니다."));
+
+        user.updateOAuth2UserInfo(dto);
     }
 }

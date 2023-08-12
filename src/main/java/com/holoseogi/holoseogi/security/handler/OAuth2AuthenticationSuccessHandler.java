@@ -4,6 +4,7 @@ import com.holoseogi.holoseogi.exception.BadRequestException;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
 import com.holoseogi.holoseogi.security.jwt.JwtTokenProvider;
 import com.holoseogi.holoseogi.security.oauth.CookieAuthorizationRequestRepository;
+import com.holoseogi.holoseogi.type.UserRole;
 import com.holoseogi.holoseogi.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,14 +54,22 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl()); // url 없으면 localhost:8080으로
 
-        // JWT 생성
-        String accessToken = tokenProvider.createAccessToken((CustomUserDetails)authentication.getPrincipal(), authentication.getAuthorities());
-        tokenProvider.createRefreshToken(authentication, response);
 
-        log.info("Redirect URI = {}", targetUrl);
-        return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("accessToken", accessToken)
-                .build().toUriString();
+        if(authentication.getAuthorities().stream().findFirst().get().getAuthority().equals(UserRole.BEFORE.getRole())){
+            // 추가 정보 적는 페이지로 이동하도록
+            return UriComponentsBuilder.fromUriString(targetUrl)
+                    .queryParam("userId", ((CustomUserDetails)authentication.getPrincipal()).getId())
+                    .build().toUriString();
+        } else {
+            // JWT 생성
+            String accessToken = tokenProvider.createAccessToken((CustomUserDetails)authentication.getPrincipal(), authentication.getAuthorities());
+            tokenProvider.createRefreshToken(authentication, response);
+
+            log.info("Redirect URI = {}", targetUrl);
+            return UriComponentsBuilder.fromUriString(targetUrl)
+                    .queryParam("accessToken", accessToken)
+                    .build().toUriString();
+        }
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
