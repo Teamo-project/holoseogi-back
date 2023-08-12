@@ -22,4 +22,14 @@ public class ExceptionController {
                 .build();
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler
+    public ResponseEntity<ErrorResp> runtimeExceptionHandler(RuntimeException e) {
+        ErrorResp errorResponse = ErrorResp.builder()
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .message(e.getMessage())
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

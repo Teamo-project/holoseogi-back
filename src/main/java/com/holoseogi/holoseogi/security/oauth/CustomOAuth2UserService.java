@@ -51,7 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             }
 
         } else {			// 가입되지 않은 경우
-            user = createUser(userInfo, authProvider);
+            user = this.createUser(userInfo, authProvider);
         }
         return CustomUserDetails.create(user, oAuth2User.getAttributes());
     }
@@ -61,7 +61,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .name(userInfo.getName())
                 .email(userInfo.getEmail())
                 .img(userInfo.getImageUrl())
-                .role(UserRole.USER)
+                .role(UserRole.BEFORE)
                 .authProvider(authProvider)
                 .build();
         return userRepository.save(user);

@@ -13,6 +13,10 @@ public class LoginUserResp {
     private String email;
     private String name;
     private String img;
+    private String phone;
+    private String gender;
+    private String region;
+    private Integer age;
 
     public static LoginUserResp getLoginUserResp(User user) {
         return LoginUserResp.builder()
@@ -20,6 +24,11 @@ public class LoginUserResp {
                 .email(user.getEmail())
                 .name(user.getName())
                 .img(user.getImg())
+                .phone(user.getPhone())
+                .gender(user.getGender().getLabel())
+                .region(user.getRegion().getLabel())
+                .age(user.getAge())
                 .build();
     }
+
 }
