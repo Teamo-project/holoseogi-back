@@ -8,7 +8,8 @@ import javax.validation.constraints.NotNull;
 public class OAuth2JoinPlusUserInfo {
     @NotNull
     private Long userId;
-    private Integer phone;
-    private String area;
-    private String age;
+    private String phone;
+    private String region;
+    private Integer age;
+    private String gender;
 }

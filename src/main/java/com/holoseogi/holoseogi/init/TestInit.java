@@ -6,10 +6,7 @@ import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.repository.MentoringRepository;
 import com.holoseogi.holoseogi.repository.PostRepository;
 import com.holoseogi.holoseogi.repository.UserRepository;
-import com.holoseogi.holoseogi.type.AuthProvider;
-import com.holoseogi.holoseogi.type.MentoringCate;
-import com.holoseogi.holoseogi.type.PostCate;
-import com.holoseogi.holoseogi.type.UserRole;
+import com.holoseogi.holoseogi.type.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +38,10 @@ public class TestInit {
                 .name("admin")
                 .role(UserRole.ADMIN)
                 .email("admin@gmail.com")
+                .phone("01012345678")
+                .region(UserRegion.SEOUL_GYUNGI)
+                .gender(UserGender.FEMALE)
+                .age(25)
                 .img("https://lh3.googleusercontent.com/a/AAcHTtexYsEPgy_IbUzA79tynRDUjzCgfabVWcyoBoJsM5R5=s96-c")
                 .authProvider(AuthProvider.GOOGLE)
                 .build();
@@ -52,6 +53,10 @@ public class TestInit {
                         .name("user" + i)
                         .role(UserRole.USER)
                         .email("user" + i + "@gmail.com")
+                        .phone("01012345678")
+                        .region(UserRegion.SEOUL_GYUNGI)
+                        .age(25)
+                        .gender(UserGender.MALE)
                         .img("https://lh3.googleusercontent.com/a/AAcHTtexYsEPgy_IbUzA79tynRDUjzCgfabVWcyoBoJsM5R5=s96-c")
                         .authProvider(AuthProvider.GOOGLE)
                         .build())

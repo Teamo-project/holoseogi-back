@@ -2,6 +2,7 @@ package com.holoseogi.holoseogi.model.entity;
 
 import com.holoseogi.holoseogi.model.request.OAuth2JoinPlusUserInfo;
 import com.holoseogi.holoseogi.type.AuthProvider;
+import com.holoseogi.holoseogi.type.UserGender;
 import com.holoseogi.holoseogi.type.UserRegion;
 import com.holoseogi.holoseogi.type.UserRole;
 import lombok.*;
@@ -31,12 +32,15 @@ public class User extends BaseEntity {
 
     private String img;
 
-    private Integer phone;
+    private String phone;
 
     private Integer age;
 
     @Enumerated(EnumType.STRING)
     private UserRegion region;
+
+    @Enumerated(EnumType.STRING)
+    private UserGender gender;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
@@ -50,11 +54,15 @@ public class User extends BaseEntity {
     private List<Mentoring> mentorings = new ArrayList<>();
 
     @Builder
-    public User(String email, String password, String name, String img, UserRole role, AuthProvider authProvider, String refreshToken) {
+    public User(String email, String password, String name, String img, String phone, Integer age, UserRegion region, UserRole role, UserGender gender, AuthProvider authProvider, String refreshToken) {
         this.email = email;
-        this.password = (Objects.isNull(password))? "":password;
+        this.password = password;
         this.name = name;
         this.img = img;
+        this.phone = phone;
+        this.age = age;
+        this.region = region;
+        this.gender = gender;
         this.role = role;
         this.authProvider = authProvider;
         this.refreshToken = refreshToken;
@@ -62,8 +70,9 @@ public class User extends BaseEntity {
 
     public void updateOAuth2UserInfo(OAuth2JoinPlusUserInfo dto) {
         this.phone = dto.getPhone();
-        this.region = UserRegion.findByLabel(dto.getAge());
-        this.age = dto.getPhone();
+        this.region = UserRegion.findByLabel(dto.getRegion());
+        this.age = dto.getAge();
+        this.gender = UserGender.findByLabel(dto.getGender());
         this.role = UserRole.USER;
     }
 }
