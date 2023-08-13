@@ -28,8 +28,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    @Value("${app.oauth2.authorizedRedirectUri}")
-    private String redirectUri;
+//    @Value("${app.oauth2.authorizedRedirectUri}")
+//    private String redirectUri;
     private final JwtTokenProvider tokenProvider;
     private final CookieAuthorizationRequestRepository authorizationRequestRepository;
     private final RedisService redisService;
@@ -50,12 +50,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         Optional<String> redirectUri = CookieUtil.getCookie(request, CookieAuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
-        log.info("Redirect URI target 전 = {}", redirectUri.orElse("없음"));
-        if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-            throw new BadRequestException("redirect URIs are not matched");
-        }
+//        if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
+//            throw new BadRequestException("redirect URIs are not matched");
+//        }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl()); // url 없으면 localhost:8080으로
-
 
         if(authentication.getAuthorities().stream().findFirst().get().getAuthority().equals(UserRole.BEFORE.getRole())){
             // 추가 정보 적는 페이지로 이동하도록
@@ -79,17 +77,17 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
-    /**
-     * 내가 설정한 redirect URL과 다른지 확인하는 메서드
-     * */
-    private boolean isAuthorizedRedirectUri(String uri) {
-        URI clientRedirectUri = URI.create(uri);
-        URI authorizedUri = URI.create(redirectUri);
-
-        if (authorizedUri.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-                && authorizedUri.getPort() == clientRedirectUri.getPort()) {
-            return true;
-        }
-        return false;
-    }
+//    /**
+//     * 내가 설정한 redirect URL과 다른지 확인하는 메서드
+//     * */
+//    private boolean isAuthorizedRedirectUri(String uri) {
+//        URI clientRedirectUri = URI.create(uri);
+//        URI authorizedUri = URI.create(redirectUri);
+//
+//        if (authorizedUri.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+//                && authorizedUri.getPort() == clientRedirectUri.getPort()) {
+//            return true;
+//        }
+//        return false;
+//    }
 }
