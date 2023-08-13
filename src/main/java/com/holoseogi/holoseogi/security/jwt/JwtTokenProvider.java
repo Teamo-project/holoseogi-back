@@ -1,5 +1,8 @@
 package com.holoseogi.holoseogi.security.jwt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.holoseogi.holoseogi.model.response.LoginUserResp;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
 import io.jsonwebtoken.*;
@@ -32,6 +35,8 @@ public class JwtTokenProvider {
     private final String AUTHORITIES_KEY = "role";
 
     @Autowired
+    private ObjectMapper mapper;
+    @Autowired
     private UserRepository userRepository;
 
     public JwtTokenProvider(@Value("${app.auth.token.secret-key}") String secretKey, @Value("${app.auth.token.refresh-cookie-key}")String cookieKey) {
@@ -53,9 +58,23 @@ public class JwtTokenProvider {
                 .setSubject(userId) // userId
                 .claim(AUTHORITIES_KEY, role)
                 .setIssuer("debrains")
+                .claim("USER", this.getClaimUserInfo(userId))
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .compact();
+    }
+
+    // user정보 프론트에 주기 위해
+    private String getClaimUserInfo(String userId) {
+        try {
+            log.info("Long.valueOf(userId)= {}", Long.valueOf(userId));
+            return mapper.writeValueAsString(
+                    LoginUserResp.getLoginUserResp(userRepository.findById(Long.valueOf(userId))
+                    .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."))));
+        } catch (JsonProcessingException e) {
+            log.info("getPayLoadUserInfo 실패");
+            return "";
+        }
     }
 
     public void createRefreshToken(Authentication authentication, HttpServletResponse response) {
