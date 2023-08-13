@@ -67,7 +67,7 @@ public class TestInit {
     private void createMentorings() {
         List<Mentoring> mentorings = IntStream.rangeClosed(1, 5).mapToObj(i -> Mentoring.builder()
                         .title("멘토링 모집")
-                        .description("학교생활 상담 멘티들을 모집합니다.")
+                        .description("멘토링 모집이요")
                         .mentor(adminUser)
                         .category(MentoringCate.COUNCEL)
                         .count(0)
