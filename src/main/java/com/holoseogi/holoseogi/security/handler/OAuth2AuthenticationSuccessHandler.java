@@ -4,6 +4,7 @@ import com.holoseogi.holoseogi.exception.BadRequestException;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
 import com.holoseogi.holoseogi.security.jwt.JwtTokenProvider;
 import com.holoseogi.holoseogi.security.oauth.CookieAuthorizationRequestRepository;
+import com.holoseogi.holoseogi.service.RedisService;
 import com.holoseogi.holoseogi.type.UserRole;
 import com.holoseogi.holoseogi.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private String redirectUri;
     private final JwtTokenProvider tokenProvider;
     private final CookieAuthorizationRequestRepository authorizationRequestRepository;
+    private final RedisService redisService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -63,9 +65,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         } else {
             // JWT 생성
             String accessToken = tokenProvider.createAccessToken((CustomUserDetails)authentication.getPrincipal(), authentication.getAuthorities());
+            // 로그아웃 체크를 위해 redis 저장
+            redisService.setValues("JWT_TOKEN:"+((CustomUserDetails)authentication.getPrincipal()).getId(), accessToken);
             tokenProvider.createRefreshToken(authentication, response);
-
-            log.info("Redirect URI = {}", targetUrl);
             return UriComponentsBuilder.fromUriString(targetUrl)
                     .queryParam("accessToken", accessToken)
                     .build().toUriString();

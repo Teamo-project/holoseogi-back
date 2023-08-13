@@ -50,4 +50,10 @@ public class UserController {
         LoginTokenResp LoginToken = userService.loginGeneralUser(dto);
         return ResponseEntity.ok(LoginToken);
     }
+
+    @GetMapping("/logout")
+    public ResponseEntity logout() {
+        userService.logout();
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }

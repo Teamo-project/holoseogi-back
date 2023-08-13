@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
@@ -124,5 +125,9 @@ public class JwtTokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    public Duration getAccessTokenExpireDuration() {
+        return Duration.ofMillis(this.ACCESS_TOKEN_EXPIRE_LENGTH);
     }
 }

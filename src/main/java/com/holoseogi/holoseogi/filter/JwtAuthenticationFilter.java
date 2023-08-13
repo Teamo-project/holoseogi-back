@@ -1,5 +1,6 @@
 package com.holoseogi.holoseogi.filter;
 
+import com.holoseogi.holoseogi.service.RedisService;
 import com.holoseogi.holoseogi.type.UserRole;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.repository.UserRepository;
@@ -32,6 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
     private final UserRepository userRepository; // debug 모드 설정 때 필요
+    private final RedisService redisService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -40,26 +42,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // debug 모드
         if (StringUtils.hasText(token) && token.equals("debug")) {
-            User admin = userRepository.findByEmail("admin@gmail.com").get();
-            Collection<? extends GrantedAuthority> authorities =
-                    Arrays.stream(UserRole.ADMIN.getRole().split(","))
-                            .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-
-            CustomUserDetails principal = new CustomUserDetails(admin.getId(), "", authorities);
-
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(principal, "", authorities));
+            this.setDebugMode();
         }
-
         // Validation Access Token
         else if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
             Authentication authentication = tokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.info(authentication.getName() + "의 인증정보 저장");
+            // 로그인 여부 체크
+            if (redisService.checkExistsValue(
+                    redisService.getValues("JWT_TOKEN:" + ((CustomUserDetails) authentication.getPrincipal()).getName()))) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         } else {
             log.info("유효한 JWT 토큰이 없습니다.");
         }
-
         filterChain.doFilter(request, response);
+    }
+
+    // debugMode : 토큰 없이도 로그인 상태로 만듬
+    private void setDebugMode() {
+        User admin = userRepository.findByEmail("admin@gmail.com").get();
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(UserRole.ADMIN.getRole().split(","))
+                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+
+        CustomUserDetails principal = new CustomUserDetails(admin.getId(), "", authorities);
+
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(principal, "", authorities));
     }
 
     private String parseBearerToken(HttpServletRequest request) {

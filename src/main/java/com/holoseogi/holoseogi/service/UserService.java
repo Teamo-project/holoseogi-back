@@ -1,5 +1,6 @@
 package com.holoseogi.holoseogi.service;
 
+import com.holoseogi.holoseogi.exception.BadRequestException;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.CreateUserReq;
 import com.holoseogi.holoseogi.model.request.OAuth2JoinPlusUserInfo;
@@ -60,8 +61,12 @@ public class UserService {
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new RuntimeException("패스워드가 틀립니다.");
         }
+        String accessToken = this.createAccessTokenByUser(user);
 
-        return new LoginTokenResp(this.createAccessTokenByUser(user));
+        // redis저장(로그아웃 체크)
+        redisService.setValues("JWT_TOKEN:"+user.getId(), accessToken, tokenProvider.getAccessTokenExpireDuration());
+
+        return new LoginTokenResp(accessToken);
     }
 
     private String createAccessTokenByUser(User user) {
@@ -79,8 +84,9 @@ public class UserService {
     }
 
     private Long getLoginUserId() {
-        return Optional.ofNullable(((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())
-                .orElseThrow(() -> new RuntimeException("로그인된 유저 정보가 없습니다."));
+        if (!SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+            return ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        } else throw new BadRequestException("로그인 상태가 아닙니다.");
     }
 
     public void sendCodeToEmail(String toEmail) {
@@ -120,9 +126,6 @@ public class UserService {
         String redisAuthCode = redisService.getValues(AUTH_CODE_PREFIX + email);
         boolean authResult = redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode);
 
-        log.info("redisService.checkExistsValue(redisAuthCode) = {}", redisService.checkExistsValue(redisAuthCode));
-        log.info("redisAuthCode.equal = {}", redisAuthCode.equals(authCode));
-        log.info("authcode = {}, redisAuthCode = {}", authCode, redisAuthCode);
         return new EmailVerificationResult(authResult);
     }
 
@@ -132,5 +135,13 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("유저 정보가 존재하지 않습니다."));
 
         user.updateOAuth2UserInfo(dto);
+    }
+
+    @Transactional
+    public void logout() {
+        User loginUser = this.getLoginUser();
+        if (redisService.checkExistsValue(redisService.getValues("JWT_TOKEN:" + loginUser.getId()))) {
+            redisService.deleteValues("JWT_TOKEN:" + loginUser.getId());
+        }
     }
 }
