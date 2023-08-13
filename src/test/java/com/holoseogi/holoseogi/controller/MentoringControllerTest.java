@@ -25,7 +25,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -236,7 +235,7 @@ class MentoringControllerTest {
     private void authorize() {
         loginUser = userRepository.findByEmail("admin@gmail.com").get();
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(UserRole.ADMIN.getRole().split(","))
+                Arrays.stream(UserRole.MENTOR.getRole().split(","))
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
         CustomUserDetails principal = new CustomUserDetails(loginUser.getId(), "", authorities);

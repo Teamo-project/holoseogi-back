@@ -62,7 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void setDebugMode() {
         User admin = userRepository.findByEmail("admin@gmail.com").get();
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(UserRole.ADMIN.getRole().split(","))
+                Arrays.stream(UserRole.MENTOR.getRole().split(","))
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
         CustomUserDetails principal = new CustomUserDetails(admin.getId(), "", authorities);

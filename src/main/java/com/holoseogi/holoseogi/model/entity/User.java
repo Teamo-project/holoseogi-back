@@ -10,7 +10,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @NoArgsConstructor
@@ -73,6 +72,6 @@ public class User extends BaseEntity {
         this.region = UserRegion.findByLabel(dto.getRegion());
         this.age = dto.getAge();
         this.gender = UserGender.findByLabel(dto.getGender());
-        this.role = UserRole.USER;
+        this.role = UserRole.MENTEE;
     }
 }
