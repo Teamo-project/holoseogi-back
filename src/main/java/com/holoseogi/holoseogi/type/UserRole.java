@@ -10,8 +10,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public enum UserRole {
     BEFORE("ROLE_BEFORE", "before"),
-    ADMIN("ROLE_ADMIN", "admin"),
-    USER("ROLE_USER", "user");
+    MENTOR("ROLE_MENTOR", "mentor"),
+    MENTEE("ROLE_MENTEE", "mentee");
 
     private final String role;
     private final String label;
