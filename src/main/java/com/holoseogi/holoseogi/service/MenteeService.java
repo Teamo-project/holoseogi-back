@@ -1,7 +1,9 @@
 package com.holoseogi.holoseogi.service;
 
+import com.holoseogi.holoseogi.exception.BadRequestException;
 import com.holoseogi.holoseogi.model.entity.ApplyMentee;
 import com.holoseogi.holoseogi.model.entity.Mentoring;
+import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.CreateApplyMenteeReq;
 import com.holoseogi.holoseogi.model.response.ApplyMenteeInfoResp;
 import com.holoseogi.holoseogi.repository.ApplyMenteeRepository;
@@ -21,10 +23,19 @@ public class MenteeService {
 
     @Transactional
     public Long createApplyMentee(Long mentoringId, CreateApplyMenteeReq dto) {
-        Mentoring mentoring = mentoringService.getMentoringById(mentoringId);
-        mentoring.applyMentoring();
+        Mentoring mentoring = mentoringService.getMentoringWithMentorById(mentoringId);
+        User loginUser = userService.getLoginUser();
 
-        ApplyMentee applyMentee = dto.toEntity(userService.getLoginUser(), mentoring);
+        if (mentoring.getMentor().equals(loginUser)) {
+            throw new BadRequestException("본인의 멘토링 글은 신청할 수 없습니다.");
+        } else if (!mentoring.getIsReceipt()) {
+            throw new BadRequestException("이미 마감된 멘토링 글입니다.");
+        } else if (mentoring.getMentees().stream().anyMatch(applyMentee -> applyMentee.getApplicant().getId().equals(loginUser.getId()))){
+            throw new BadRequestException("이미 신청되었습니다.");
+        }
+
+        mentoring.applyMentoring();
+        ApplyMentee applyMentee = dto.toEntity(loginUser, mentoring);
         return menteeRepository.save(applyMentee).getId();
     }
 

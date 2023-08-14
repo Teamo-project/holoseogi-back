@@ -5,6 +5,7 @@ import com.holoseogi.holoseogi.model.response.ApplyMenteeInfoResp;
 import com.holoseogi.holoseogi.service.MenteeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +18,9 @@ public class MenteeController {
     private final MenteeService menteeService;
 
     @PostMapping("/{mentoringId}")
-    public ResponseEntity<ApplyMenteeInfoResp> applyMentee(@PathVariable("mentoringId") Long mentoringId, @RequestBody CreateApplyMenteeReq dto) {
+    public ResponseEntity applyMentee(@PathVariable("mentoringId") Long mentoringId, @RequestBody CreateApplyMenteeReq dto) {
         Long applyMenteeId = menteeService.createApplyMentee(mentoringId, dto);
-        return ResponseEntity.ok(menteeService.getApplyMenteeDtoById(applyMenteeId));
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/{applyMenteeId}")
