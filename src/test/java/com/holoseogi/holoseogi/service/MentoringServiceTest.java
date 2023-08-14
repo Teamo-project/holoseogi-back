@@ -87,7 +87,7 @@ class MentoringServiceTest {
         Long saveMentoringId = mentoringService.createMentoring(request);
 
         // when
-        MentoringDetailResp response = mentoringService.getMentoringDtoById(saveMentoringId);
+        MentoringDetailResp response = mentoringService.getMentoringDtoById(saveMentoringId, loginUser.getId());
 
         // then
         assertThat(response.getId()).isEqualTo(saveMentoringId);
@@ -293,7 +293,7 @@ class MentoringServiceTest {
         em.clear();
 
         // then
-        assertThat(mentoringService.getMentoringDtoById(mentoring.getId()).getIsReceipt()).isFalse();
+        assertThat(mentoringService.getMentoringDtoById(mentoring.getId(), loginUser.getId()).getIsReceipt()).isFalse();
     }
 
     @Test

@@ -29,11 +29,11 @@ public class MentoringService {
     }
 
     @Transactional(readOnly = true)
-    public MentoringDetailResp getMentoringDtoById(Long mentoringId) {
-        Mentoring mentoring = mentoringRepository.findById(mentoringId)
+    public MentoringDetailResp getMentoringDtoById(Long mentoringId, Long loginUserId) {
+        Mentoring mentoring = mentoringRepository.findWithMentorById(mentoringId)
                 .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
         // todo: 로그인한 유저가 이미 신청한 상태인지 확인하는 로직 필요한가?
-        return new MentoringDetailResp(mentoring);
+        return new MentoringDetailResp(mentoring, mentoring.getMentor().getId().equals(loginUserId));
     }
 
     @Transactional

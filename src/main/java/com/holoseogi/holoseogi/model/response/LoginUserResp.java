@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Objects;
+
 @Builder
 @AllArgsConstructor
 @Getter
@@ -24,7 +26,7 @@ public class LoginUserResp {
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
-                .img(user.getImg())
+                .img((Objects.isNull(user.getImg()))?"null": user.getImg())
                 .phone(user.getPhone())
                 .gender(user.getGender().getLabel())
                 .region(user.getRegion().getLabel())
