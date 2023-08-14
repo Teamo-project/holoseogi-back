@@ -34,7 +34,7 @@ public class MentoringController {
 
     @GetMapping("/{mentoringId}")
     public ResponseEntity<MentoringDetailResp> getMentoringDetail(@AuthenticationPrincipal CustomUserDetails loginUser, @PathVariable("mentoringId") Long mentoringId) {
-        return ResponseEntity.ok(mentoringService.getMentoringDtoById(mentoringId, loginUser.getId()));
+        return ResponseEntity.ok(mentoringService.getMentoringDtoById(mentoringId, loginUser));
     }
 
     @PutMapping("/{mentoringId}")
