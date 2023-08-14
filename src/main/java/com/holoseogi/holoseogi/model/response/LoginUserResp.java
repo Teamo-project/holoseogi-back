@@ -17,6 +17,7 @@ public class LoginUserResp {
     private String gender;
     private String region;
     private Integer age;
+    private String role;
 
     public static LoginUserResp getLoginUserResp(User user) {
         return LoginUserResp.builder()
@@ -28,7 +29,7 @@ public class LoginUserResp {
                 .gender(user.getGender().getLabel())
                 .region(user.getRegion().getLabel())
                 .age(user.getAge())
+                .role(user.getRole().getLabel())
                 .build();
     }
-
 }
