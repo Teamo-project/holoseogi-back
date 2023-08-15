@@ -1,5 +1,6 @@
 package com.holoseogi.holoseogi.model.response;
 
+import com.holoseogi.holoseogi.model.entity.ApplyMentee;
 import com.holoseogi.holoseogi.model.entity.Mentoring;
 import lombok.Getter;
 import lombok.ToString;
@@ -27,5 +28,16 @@ public class MentoringListResp {
         this.isReceipt = mentoring.getIsReceipt();
         this.createDate = mentoring.getCreateDate();
         this.creatorName = mentoring.getMentor().getName();
+    }
+
+    public MentoringListResp(ApplyMentee applyMentee) {
+        this.id = applyMentee.getId();
+        this.title = applyMentee.getMentoring().getTitle();
+        this.category = applyMentee.getMentoring().getCategory().getLabel();
+        this.count = applyMentee.getMentoring().getCount();
+        this.limited = applyMentee.getMentoring().getLimited();
+        this.isReceipt = applyMentee.getMentoring().getIsReceipt();
+        this.createDate = applyMentee.getMentoring().getCreateDate();
+        this.creatorName = applyMentee.getMentoring().getMentor().getName();
     }
 }
