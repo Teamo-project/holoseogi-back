@@ -145,4 +145,12 @@ public class UserService {
             redisService.deleteValues("JWT_TOKEN:" + loginUser.getId());
         }
     }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new RuntimeException("객체를 찾을 수 없습니다.");
+        }
+        userRepository.deleteById(userId);
+    }
 }
