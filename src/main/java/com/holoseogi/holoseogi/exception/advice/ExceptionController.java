@@ -1,4 +1,4 @@
-package com.holoseogi.holoseogi.controller;
+package com.holoseogi.holoseogi.exception.advice;
 
 import com.holoseogi.holoseogi.exception.BadRequestException;
 import com.holoseogi.holoseogi.model.response.ErrorResp;

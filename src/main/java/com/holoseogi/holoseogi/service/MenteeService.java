@@ -6,7 +6,7 @@ import com.holoseogi.holoseogi.model.entity.Mentoring;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.CreateApplyMenteeReq;
 import com.holoseogi.holoseogi.model.response.ApplyMenteeInfoResp;
-import com.holoseogi.holoseogi.model.response.MentoringListResp;
+import com.holoseogi.holoseogi.model.response.MyPageMentoringListResp;
 import com.holoseogi.holoseogi.repository.ApplyMenteeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,11 +52,11 @@ public class MenteeService {
     }
 
     @Transactional(readOnly = true)
-    public Slice<MentoringListResp> getMyApplyMentoring(Long userId, Pageable pageable, Long lastApplicantId) {
+    public Slice<MyPageMentoringListResp> getMyApplyMentoring(Long userId, Pageable pageable, Long lastApplicantId) {
         return menteeRepository.findMyApplyMentoring(
                         pageable,
                         userId,
                         Objects.isNull(lastApplicantId) ? Long.MAX_VALUE : lastApplicantId)
-                .map(MentoringListResp::new);
+                .map(MyPageMentoringListResp::new);
     }
 }

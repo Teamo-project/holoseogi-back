@@ -1,6 +1,5 @@
 package com.holoseogi.holoseogi.model.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.holoseogi.holoseogi.model.entity.ApplyMentee;
 import com.holoseogi.holoseogi.model.entity.Mentoring;
 import lombok.Getter;
@@ -10,8 +9,7 @@ import java.time.LocalDateTime;
 
 @ToString
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class MentoringListResp {
+public class MyPageMentoringListResp {
     private Long id;
     private String title;
     private String category;
@@ -22,7 +20,7 @@ public class MentoringListResp {
     private String creatorName;
     private String description;
 
-    public MentoringListResp(Mentoring mentoring) {
+    public MyPageMentoringListResp(Mentoring mentoring) {
         this.id = mentoring.getId();
         this.title = mentoring.getTitle();
         this.category = mentoring.getCategory().getLabel();
@@ -31,6 +29,18 @@ public class MentoringListResp {
         this.isReceipt = mentoring.getIsReceipt();
         this.createDate = mentoring.getCreateDate();
         this.creatorName = mentoring.getMentor().getName();
+        this.description = mentoring.getDescription();
     }
 
+    public MyPageMentoringListResp(ApplyMentee applyMentee) {
+        this.id = applyMentee.getId();
+        this.title = applyMentee.getMentoring().getTitle();
+        this.category = applyMentee.getMentoring().getCategory().getLabel();
+        this.count = applyMentee.getMentoring().getCount();
+        this.limited = applyMentee.getMentoring().getLimited();
+        this.isReceipt = applyMentee.getMentoring().getIsReceipt();
+        this.createDate = applyMentee.getMentoring().getCreateDate();
+        this.creatorName = applyMentee.getMentoring().getMentor().getName();
+        this.description = applyMentee.getDescription();
+    }
 }

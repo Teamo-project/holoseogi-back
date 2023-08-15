@@ -7,6 +7,7 @@ import com.holoseogi.holoseogi.model.request.SearchMentoring;
 import com.holoseogi.holoseogi.model.request.UpdateMentoringReq;
 import com.holoseogi.holoseogi.model.response.MentoringDetailResp;
 import com.holoseogi.holoseogi.model.response.MentoringListResp;
+import com.holoseogi.holoseogi.model.response.MyPageMentoringListResp;
 import com.holoseogi.holoseogi.repository.MentoringRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
 import com.holoseogi.holoseogi.type.MentoringCate;
@@ -69,11 +70,11 @@ public class MentoringService {
     }
 
     @Transactional(readOnly = true)
-    public Slice<MentoringListResp> getMyMentoringList(Long loginUserId, Pageable pageable, Long lastMentoringId) {
+    public Slice<MyPageMentoringListResp> getMyMentoringList(Long loginUserId, Pageable pageable, Long lastMentoringId) {
         return mentoringRepository.getMyMentorings(pageable,
                         loginUserId,
                         Objects.isNull(lastMentoringId) ? Long.MAX_VALUE : lastMentoringId)
-                .map(MentoringListResp::new);
+                .map(MyPageMentoringListResp::new);
     }
 
     @Transactional

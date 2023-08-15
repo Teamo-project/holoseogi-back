@@ -2,7 +2,7 @@ package com.holoseogi.holoseogi.controller;
 
 import com.holoseogi.holoseogi.model.request.CreateApplyMenteeReq;
 import com.holoseogi.holoseogi.model.response.ApplyMenteeInfoResp;
-import com.holoseogi.holoseogi.model.response.MentoringListResp;
+import com.holoseogi.holoseogi.model.response.MyPageMentoringListResp;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
 import com.holoseogi.holoseogi.service.MenteeService;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +37,8 @@ public class MenteeController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<Slice<MentoringListResp>> getMyApplyMentoring(@AuthenticationPrincipal CustomUserDetails loginUser,
-                                                                        @PageableDefault(
+    public ResponseEntity<Slice<MyPageMentoringListResp>> getMyApplyMentoring(@AuthenticationPrincipal CustomUserDetails loginUser,
+                                                                              @PageableDefault(
                                                                                 size = 3,
                                                                                 sort = "createDate",
                                                                                 direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(value = "last", required = false) Long lastApplicantId) {

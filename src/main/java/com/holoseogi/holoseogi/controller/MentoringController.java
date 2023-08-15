@@ -5,6 +5,7 @@ import com.holoseogi.holoseogi.model.request.SearchMentoring;
 import com.holoseogi.holoseogi.model.request.UpdateMentoringReq;
 import com.holoseogi.holoseogi.model.response.MentoringDetailResp;
 import com.holoseogi.holoseogi.model.response.MentoringListResp;
+import com.holoseogi.holoseogi.model.response.MyPageMentoringListResp;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
 import com.holoseogi.holoseogi.service.MentoringService;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +66,7 @@ public class MentoringController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<Slice<MentoringListResp>> myMentoringList(@AuthenticationPrincipal CustomUserDetails loginUser, @PageableDefault(
+    public ResponseEntity<Slice<MyPageMentoringListResp>> myMentoringList(@AuthenticationPrincipal CustomUserDetails loginUser, @PageableDefault(
             size = 3,
             sort = "createDate",
             direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(value = "last", required = false) Long lastMentoringId
