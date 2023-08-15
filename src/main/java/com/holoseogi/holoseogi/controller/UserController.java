@@ -51,6 +51,8 @@ public class UserController {
     @PutMapping("/update")
     public ResponseEntity updateUserInfo(@RequestBody UpdateUserInfoReq updateUserInfoReq) {
         userService.updateUserInfo(updateUserInfoReq);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
     @GetMapping("/logout")
     public ResponseEntity logout() {
