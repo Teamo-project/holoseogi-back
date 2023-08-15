@@ -3,6 +3,7 @@ package com.holoseogi.holoseogi.service;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.CreateUserReq;
 import com.holoseogi.holoseogi.model.request.OAuth2JoinPlusUserInfo;
+import com.holoseogi.holoseogi.model.request.UpdateUserInfoReq;
 import com.holoseogi.holoseogi.model.request.UserLoginReq;
 import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
 import com.holoseogi.holoseogi.model.response.LoginTokenResp;
@@ -133,4 +134,21 @@ public class UserService {
 
         user.updateOAuth2UserInfo(dto);
     }
+
+
+
+    @Transactional
+    public void updateUserInfo(UpdateUserInfoReq updateReq) {
+        User user = userRepository.findById(updateReq.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Transactional
+    public void withdrawUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
+    }
+
+
 }

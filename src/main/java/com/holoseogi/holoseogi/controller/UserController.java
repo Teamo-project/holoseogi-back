@@ -1,6 +1,8 @@
 package com.holoseogi.holoseogi.controller;
 
 import com.holoseogi.holoseogi.model.request.CreateUserReq;
+import com.holoseogi.holoseogi.model.request.UpdatePostReq;
+import com.holoseogi.holoseogi.model.request.UpdateUserInfoReq;
 import com.holoseogi.holoseogi.model.request.UserLoginReq;
 import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
 import com.holoseogi.holoseogi.model.response.LoginTokenResp;
@@ -50,4 +52,19 @@ public class UserController {
         LoginTokenResp LoginToken = userService.loginGeneralUser(dto);
         return ResponseEntity.ok(LoginToken);
     }
+
+
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<String> updateUserInfo(@RequestBody UpdateUserInfoReq updateUserInfoReq) {
+        userService.updateUserInfo(updateUserInfoReq);
+        return ResponseEntity.ok("User information updated successfully.");
+    }
+
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<String> withdrawUser(@RequestParam("userId") Long userId) {
+        userService.withdrawUser(userId);
+        return ResponseEntity.ok("User has been withdrawn successfully.");
+    }
+
+
 }
