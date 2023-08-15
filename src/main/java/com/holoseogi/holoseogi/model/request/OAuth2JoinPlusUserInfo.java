@@ -12,4 +12,5 @@ public class OAuth2JoinPlusUserInfo {
     private String region;
     private Integer age;
     private String gender;
+    private String role;
 }

@@ -72,6 +72,6 @@ public class User extends BaseEntity {
         this.region = UserRegion.findByLabel(dto.getRegion());
         this.age = dto.getAge();
         this.gender = UserGender.findByLabel(dto.getGender());
-        this.role = UserRole.MENTEE;
+        this.role = UserRole.findByLabel(dto.getRole());
     }
 }
