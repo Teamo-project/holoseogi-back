@@ -1,10 +1,8 @@
 package com.holoseogi.holoseogi.service;
 
+import com.holoseogi.holoseogi.model.entity.Post;
 import com.holoseogi.holoseogi.model.entity.User;
-import com.holoseogi.holoseogi.model.request.CreateUserReq;
-import com.holoseogi.holoseogi.model.request.OAuth2JoinPlusUserInfo;
-import com.holoseogi.holoseogi.model.request.UpdateUserInfoReq;
-import com.holoseogi.holoseogi.model.request.UserLoginReq;
+import com.holoseogi.holoseogi.model.request.*;
 import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
 import com.holoseogi.holoseogi.model.response.LoginTokenResp;
 import com.holoseogi.holoseogi.repository.UserRepository;
@@ -33,7 +31,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private static final String AUTH_CODE_PREFIX = "AuthCode ";
     private final UserRepository userRepository;
     private final MailService mailService;
@@ -137,10 +134,18 @@ public class UserService {
 
 
 
+
+
     @Transactional
-    public void updateUserInfo(UpdateUserInfoReq updateReq) {
-        User user = userRepository.findById(updateReq.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public void updateUserInfo(Long userId, UpdateUserInfoReq requestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
+        user.update(requestDto);
+
+        if (requestDto.getPassword() != null) {
+            String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+            user.setPassword(encodedPassword);
+        }
     }
 
     @Transactional
@@ -149,6 +154,5 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userRepository.delete(user);
     }
-
 
 }

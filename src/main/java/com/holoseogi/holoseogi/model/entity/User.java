@@ -1,10 +1,9 @@
 package com.holoseogi.holoseogi.model.entity;
 
 import com.holoseogi.holoseogi.model.request.OAuth2JoinPlusUserInfo;
-import com.holoseogi.holoseogi.type.AuthProvider;
-import com.holoseogi.holoseogi.type.UserGender;
-import com.holoseogi.holoseogi.type.UserRegion;
-import com.holoseogi.holoseogi.type.UserRole;
+import com.holoseogi.holoseogi.model.request.UpdatePostReq;
+import com.holoseogi.holoseogi.model.request.UpdateUserInfoReq;
+import com.holoseogi.holoseogi.type.*;
 import lombok.*;
 
 import javax.persistence.*;
@@ -74,5 +73,19 @@ public class User extends BaseEntity {
         this.age = dto.getAge();
         this.gender = UserGender.findByLabel(dto.getGender());
         this.role = UserRole.USER;
+    }
+
+    public void update(UpdateUserInfoReq requestDto) {
+
+        this.region = UserRegion.findByLabel(requestDto.getRegion());
+        this.gender = UserGender.findByLabel(requestDto.getGender());
+        this.age = requestDto.getAge();
+        this.phone = requestDto.getPhone();
+        this.password = requestDto.getPassword();
+        this.name = requestDto.getName();
+    }
+
+    public void setPassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 }

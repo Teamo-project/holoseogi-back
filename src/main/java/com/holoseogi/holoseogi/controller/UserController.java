@@ -1,12 +1,7 @@
 package com.holoseogi.holoseogi.controller;
 
-import com.holoseogi.holoseogi.model.request.CreateUserReq;
-import com.holoseogi.holoseogi.model.request.UpdatePostReq;
-import com.holoseogi.holoseogi.model.request.UpdateUserInfoReq;
-import com.holoseogi.holoseogi.model.request.UserLoginReq;
-import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
-import com.holoseogi.holoseogi.model.response.LoginTokenResp;
-import com.holoseogi.holoseogi.model.response.LoginUserResp;
+import com.holoseogi.holoseogi.model.request.*;
+import com.holoseogi.holoseogi.model.response.*;
 import com.holoseogi.holoseogi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,15 +50,16 @@ public class UserController {
 
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<String> updateUserInfo(@RequestBody UpdateUserInfoReq updateUserInfoReq) {
-        userService.updateUserInfo(updateUserInfoReq);
-        return ResponseEntity.ok("User information updated successfully.");
+    public ResponseEntity<String> updateUserInfo(
+            @PathVariable("userId") Long userId,
+            @RequestBody UpdateUserInfoReq updateUserInfoReq){userService.updateUserInfo(userId, updateUserInfoReq);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping("/withdraw")
     public ResponseEntity<String> withdrawUser(@RequestParam("userId") Long userId) {
         userService.withdrawUser(userId);
-        return ResponseEntity.ok("User has been withdrawn successfully.");
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 
