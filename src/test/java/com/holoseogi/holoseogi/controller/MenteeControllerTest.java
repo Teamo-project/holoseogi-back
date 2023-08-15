@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -131,6 +132,7 @@ class MenteeControllerTest {
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
         CustomUserDetails principal = new CustomUserDetails(loginUser.getId(), "", authorities);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(principal, "", authorities));
         accessToken = jwtTokenProvider.createAccessToken(principal, authorities);
     }
 }

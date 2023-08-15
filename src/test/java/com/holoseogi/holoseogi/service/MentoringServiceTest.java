@@ -317,7 +317,7 @@ class MentoringServiceTest {
     private void authorize() {
         loginUser = userRepository.findByEmail("admin@gmail.com").get();
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(UserRole.ADMIN.getRole().split(","))
+                Arrays.stream(UserRole.MENTOR.getRole().split(","))
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
         CustomUserDetails principal = new CustomUserDetails(loginUser.getId(), "", authorities);
