@@ -3,6 +3,7 @@ package com.holoseogi.holoseogi.type;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.DataOutput;
 import java.util.HashMap;
 import java.util.Map;
 

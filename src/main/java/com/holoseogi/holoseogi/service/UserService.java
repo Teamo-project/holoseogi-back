@@ -2,9 +2,7 @@ package com.holoseogi.holoseogi.service;
 
 import com.holoseogi.holoseogi.exception.BadRequestException;
 import com.holoseogi.holoseogi.model.entity.User;
-import com.holoseogi.holoseogi.model.request.CreateUserReq;
-import com.holoseogi.holoseogi.model.request.OAuth2JoinPlusUserInfo;
-import com.holoseogi.holoseogi.model.request.UserLoginReq;
+import com.holoseogi.holoseogi.model.request.*;
 import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
 import com.holoseogi.holoseogi.model.response.LoginTokenResp;
 import com.holoseogi.holoseogi.repository.UserRepository;
@@ -20,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
@@ -33,7 +30,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private static final String AUTH_CODE_PREFIX = "AuthCode ";
     private final UserRepository userRepository;
     private final MailService mailService;
@@ -138,6 +134,11 @@ public class UserService {
     }
 
     @Transactional
+    public void updateUserInfo(UpdateUserInfoReq requestDto) {
+        requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        this.getLoginUser().update(requestDto);
+    }
+
     public void logout() {
         User loginUser = this.getLoginUser();
         if (redisService.checkExistsValue(redisService.getValues("JWT_TOKEN:" + loginUser.getId()))) {
