@@ -22,9 +22,6 @@ public enum UserRegion {
     JEOLLA_SOUTH("전라남도"),
     GANGWON("강원도");
 
-
-
-
     private String label;
 
     private static final Map<String, UserRegion> BY_LABEL = new HashMap<>();

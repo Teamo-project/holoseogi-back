@@ -53,7 +53,4 @@ public class UserController {
         userService.updateUserInfo(updateUserInfoReq);
         return new ResponseEntity(HttpStatus.OK);
     }
-
-
-
 }

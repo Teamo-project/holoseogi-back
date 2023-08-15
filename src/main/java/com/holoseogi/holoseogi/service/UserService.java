@@ -138,6 +138,4 @@ public class UserService {
         requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         this.getLoginUser().update(requestDto);
     }
-
-
 }
