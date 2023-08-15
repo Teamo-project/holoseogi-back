@@ -13,6 +13,7 @@ import com.holoseogi.holoseogi.type.MentoringCate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,8 +69,10 @@ public class MentoringService {
     }
 
     @Transactional(readOnly = true)
-    public Page<MentoringListResp> getMyMentoringList(Pageable pageable) {
-        return mentoringRepository.getMyMentorings(pageable, userService.getLoginUser())
+    public Slice<MentoringListResp> getMyMentoringList(Long loginUserId, Pageable pageable, Long lastMentoringId) {
+        return mentoringRepository.getMyMentorings(pageable,
+                        loginUserId,
+                        Objects.isNull(lastMentoringId) ? Long.MAX_VALUE : lastMentoringId)
                 .map(MentoringListResp::new);
     }
 

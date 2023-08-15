@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -64,11 +65,11 @@ public class MentoringController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<Page<MentoringListResp>> myMentoringList(@PageableDefault(
-            size = 10,
+    public ResponseEntity<Slice<MentoringListResp>> myMentoringList(@AuthenticationPrincipal CustomUserDetails loginUser, @PageableDefault(
+            size = 3,
             sort = "createDate",
-            direction = Sort.Direction.DESC) Pageable pageable
+            direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(value = "last", required = false) Long lastMentoringId
     ) {
-        return ResponseEntity.ok(mentoringService.getMyMentoringList(pageable));
+        return ResponseEntity.ok(mentoringService.getMyMentoringList(loginUser.getId(), pageable, lastMentoringId));
     }
 }
