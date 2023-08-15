@@ -7,13 +7,18 @@ import com.holoseogi.holoseogi.model.request.SearchMentoring;
 import com.holoseogi.holoseogi.model.request.UpdateMentoringReq;
 import com.holoseogi.holoseogi.model.response.MentoringDetailResp;
 import com.holoseogi.holoseogi.model.response.MentoringListResp;
+import com.holoseogi.holoseogi.model.response.MyPageMentoringListResp;
 import com.holoseogi.holoseogi.repository.MentoringRepository;
+import com.holoseogi.holoseogi.security.CustomUserDetails;
 import com.holoseogi.holoseogi.type.MentoringCate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -29,11 +34,19 @@ public class MentoringService {
     }
 
     @Transactional(readOnly = true)
-    public MentoringDetailResp getMentoringDtoById(Long mentoringId) {
-        Mentoring mentoring = mentoringRepository.findById(mentoringId)
+    public MentoringDetailResp getMentoringDtoById(Long mentoringId, CustomUserDetails loginUser) {
+        Mentoring mentoring = mentoringRepository.findWithMentorById(mentoringId)
                 .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
-        // todo: 로그인한 유저가 이미 신청한 상태인지 확인하는 로직 필요한가?
-        return new MentoringDetailResp(mentoring);
+        return new MentoringDetailResp(mentoring,
+                mentoring.getMentor().getId().equals(
+                        Objects.isNull(loginUser) ? -1 : loginUser.getId()));
+    }
+
+    @Transactional(readOnly = true)
+    public MentoringDetailResp getMentoringDtoById(Long mentoringId, Long loginUserId) {
+        Mentoring mentoring = mentoringRepository.findWithMentorById(mentoringId)
+                .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
+        return new MentoringDetailResp(mentoring, mentoring.getMentor().getId().equals(loginUserId));
     }
 
     @Transactional
@@ -57,9 +70,11 @@ public class MentoringService {
     }
 
     @Transactional(readOnly = true)
-    public Page<MentoringListResp> getMyMentoringList(Pageable pageable) {
-        return mentoringRepository.getMyMentorings(pageable, userService.getLoginUser())
-                .map(MentoringListResp::new);
+    public Slice<MyPageMentoringListResp> getMyMentoringList(Long loginUserId, Pageable pageable, Long lastMentoringId) {
+        return mentoringRepository.getMyMentorings(pageable,
+                        loginUserId,
+                        Objects.isNull(lastMentoringId) ? Long.MAX_VALUE : lastMentoringId)
+                .map(MyPageMentoringListResp::new);
     }
 
     @Transactional
@@ -80,8 +95,8 @@ public class MentoringService {
     }
 
     @Transactional(readOnly = true)
-    public Mentoring getMentoringById(Long mentoringId) {
-        return mentoringRepository.findById(mentoringId)
+    public Mentoring getMentoringWithMentorById(Long mentoringId) {
+        return mentoringRepository.findWithMentorById(mentoringId)
                 .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
     }
 }

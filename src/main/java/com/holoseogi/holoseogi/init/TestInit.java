@@ -29,7 +29,8 @@ public class TestInit {
         createDebugUser(); // AdminUser 생성
         getAdminUser(); // 전역변수에 adminUser넣어두기
         createUsers(); // 일반 유저 생성
-        createMentorings(); // 멘토링 글 생성
+        createCouncelMentorings(); // 멘토링 글 생성
+        createEmployMentorings();
         createPostings(); // 게시글 생성
     }
 
@@ -64,12 +65,26 @@ public class TestInit {
         userRepository.saveAll(users);
     }
 
-    private void createMentorings() {
+    private void createCouncelMentorings() {
         List<Mentoring> mentorings = IntStream.rangeClosed(1, 5).mapToObj(i -> Mentoring.builder()
                         .title("멘토링 모집")
                         .description("멘토링 모집이요")
                         .mentor(adminUser)
                         .category(MentoringCate.COUNCEL)
+                        .count(0)
+                        .isReceipt(true)
+                        .limited(5)
+                        .build())
+                .collect(Collectors.toList());
+        mentoringRepository.saveAll(mentorings);
+    }
+
+    private void createEmployMentorings() {
+        List<Mentoring> mentorings = IntStream.rangeClosed(1, 5).mapToObj(i -> Mentoring.builder()
+                        .title("취업 멘토링 모집")
+                        .description("취업 멘토링 모집이요")
+                        .mentor(adminUser)
+                        .category(MentoringCate.EMPLOY)
                         .count(0)
                         .isReceipt(true)
                         .limited(5)

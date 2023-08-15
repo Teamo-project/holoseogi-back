@@ -13,6 +13,7 @@ public class ApplyMenteeInfoResp {
     private String mentoringTitle;
     private Long applicantId;
     private String applicantEmail;
+    private String applicantName;
 
     public ApplyMenteeInfoResp(ApplyMentee applyMentee) {
         this.id = applyMentee.getId();
@@ -21,5 +22,6 @@ public class ApplyMenteeInfoResp {
         this.mentoringTitle = applyMentee.getMentoring().getTitle();
         this.applicantId = applyMentee.getApplicant().getId();
         this.applicantEmail = applyMentee.getApplicant().getEmail();
+        this.applicantName = applyMentee.getApplicant().getName();
     }
 }
