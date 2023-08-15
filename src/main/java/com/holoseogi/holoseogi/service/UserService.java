@@ -1,6 +1,6 @@
 package com.holoseogi.holoseogi.service;
 
-import com.holoseogi.holoseogi.model.entity.Post;
+import com.holoseogi.holoseogi.model.entity.Mentoring;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.*;
 import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
@@ -24,6 +24,7 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -132,27 +133,11 @@ public class UserService {
         user.updateOAuth2UserInfo(dto);
     }
 
-
-
-
-
     @Transactional
-    public void updateUserInfo(Long userId, UpdateUserInfoReq requestDto) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("객체를 찾을 수 없습니다."));
-        user.update(requestDto);
-
-        if (requestDto.getPassword() != null) {
-            String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
-            user.setPassword(encodedPassword);
-        }
+    public void updateUserInfo(UpdateUserInfoReq requestDto) {
+        requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        this.getLoginUser().update(requestDto);
     }
 
-    @Transactional
-    public void withdrawUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        userRepository.delete(user);
-    }
 
 }

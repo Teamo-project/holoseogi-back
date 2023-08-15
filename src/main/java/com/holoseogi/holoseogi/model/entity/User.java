@@ -76,16 +76,11 @@ public class User extends BaseEntity {
     }
 
     public void update(UpdateUserInfoReq requestDto) {
-
         this.region = UserRegion.findByLabel(requestDto.getRegion());
-        this.gender = UserGender.findByLabel(requestDto.getGender());
         this.age = requestDto.getAge();
         this.phone = requestDto.getPhone();
         this.password = requestDto.getPassword();
         this.name = requestDto.getName();
     }
 
-    public void setPassword(String encodedPassword) {
-        this.password = encodedPassword;
-    }
 }

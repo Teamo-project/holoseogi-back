@@ -48,19 +48,12 @@ public class UserController {
         return ResponseEntity.ok(LoginToken);
     }
 
-
-    @PutMapping("/update/{userId}")
-    public ResponseEntity<String> updateUserInfo(
-            @PathVariable("userId") Long userId,
-            @RequestBody UpdateUserInfoReq updateUserInfoReq){userService.updateUserInfo(userId, updateUserInfoReq);
+    @PutMapping("/update")
+    public ResponseEntity updateUserInfo(@RequestBody UpdateUserInfoReq updateUserInfoReq) {
+        userService.updateUserInfo(updateUserInfoReq);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @DeleteMapping("/withdraw")
-    public ResponseEntity<String> withdrawUser(@RequestParam("userId") Long userId) {
-        userService.withdrawUser(userId);
-        return new ResponseEntity(HttpStatus.OK);
-    }
 
 
 }

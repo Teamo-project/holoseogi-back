@@ -12,22 +12,8 @@ import lombok.Setter;
 public class UpdateUserInfoReq {
     private Long userId;
     private String region;
-    private String gender;
     private Integer age;
     private String phone;
     private String password;
     private String name;
-
-
-
-    public User toEntity(User loginUser) {
-        return User.builder()
-                .region(UserRegion.findByLabel(region))
-                .gender(UserGender.findByLabel(gender))
-                .age(age)
-                .phone(phone)
-                .password(password)
-                .name(name)
-                .build();
-    }
 }
