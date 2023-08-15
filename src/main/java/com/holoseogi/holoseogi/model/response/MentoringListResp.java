@@ -1,5 +1,6 @@
 package com.holoseogi.holoseogi.model.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.holoseogi.holoseogi.model.entity.ApplyMentee;
 import com.holoseogi.holoseogi.model.entity.Mentoring;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @ToString
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MentoringListResp {
     private Long id;
     private String title;
@@ -18,6 +20,7 @@ public class MentoringListResp {
     private Boolean isReceipt;
     private LocalDateTime createDate;
     private String creatorName;
+    private String description;
 
     public MentoringListResp(Mentoring mentoring) {
         this.id = mentoring.getId();
@@ -39,5 +42,6 @@ public class MentoringListResp {
         this.isReceipt = applyMentee.getMentoring().getIsReceipt();
         this.createDate = applyMentee.getMentoring().getCreateDate();
         this.creatorName = applyMentee.getMentoring().getMentor().getName();
+        this.description = applyMentee.getDescription();
     }
 }
