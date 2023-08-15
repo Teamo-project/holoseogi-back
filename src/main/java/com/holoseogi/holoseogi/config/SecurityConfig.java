@@ -47,8 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/oauth2/**", "/auth/**").permitAll() // 로그인, refresh
-                .antMatchers("/api/v1/admin/**").hasRole("ADMIN") // admin 페이지
-                .antMatchers("/api/v1/user/**").authenticated() // 권한 필요
                 .anyRequest().permitAll();
 
         http.cors()                     // CORS on
