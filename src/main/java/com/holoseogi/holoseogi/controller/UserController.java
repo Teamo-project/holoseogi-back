@@ -47,7 +47,6 @@ public class UserController {
         LoginTokenResp LoginToken = userService.loginGeneralUser(dto);
         return ResponseEntity.ok(LoginToken);
     }
-
     @PutMapping("/update")
     public ResponseEntity updateUserInfo(@RequestBody UpdateUserInfoReq updateUserInfoReq) {
         userService.updateUserInfo(updateUserInfoReq);
