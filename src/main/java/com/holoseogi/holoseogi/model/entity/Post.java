@@ -43,4 +43,7 @@ public class Post extends BaseEntity{
         this.content = requestDto.getContent();
         this.category = PostCate.findByLabel(requestDto.getCategory());
     }
+
+    public void setCreator(Object o) {
+    }
 }
