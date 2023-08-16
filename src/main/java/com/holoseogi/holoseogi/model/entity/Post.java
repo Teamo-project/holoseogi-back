@@ -44,6 +44,7 @@ public class Post extends BaseEntity{
         this.category = PostCate.findByLabel(requestDto.getCategory());
     }
 
-    public void setCreator(Object o) {
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 }
