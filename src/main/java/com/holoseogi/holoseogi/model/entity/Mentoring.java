@@ -73,5 +73,10 @@ public class Mentoring extends BaseEntity{
         count += 1;
         if(count == limited) changeReceiptToFalse();
     }
+
+
+    public void setMentor(User mentor) {
+        this.mentor = mentor;
+    }
 }
 

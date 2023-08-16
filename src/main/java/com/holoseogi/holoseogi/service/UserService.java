@@ -1,12 +1,16 @@
 package com.holoseogi.holoseogi.service;
 
 import com.holoseogi.holoseogi.exception.BadRequestException;
+import com.holoseogi.holoseogi.model.entity.Mentoring;
 import com.holoseogi.holoseogi.model.entity.Post;
+import com.holoseogi.holoseogi.model.entity.Reply;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.*;
 import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
 import com.holoseogi.holoseogi.model.response.LoginTokenResp;
+import com.holoseogi.holoseogi.repository.MentoringRepository;
 import com.holoseogi.holoseogi.repository.PostRepository;
+import com.holoseogi.holoseogi.repository.ReplyRepository;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
 import com.holoseogi.holoseogi.security.jwt.JwtTokenProvider;
@@ -41,6 +45,8 @@ public class UserService {
     private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
+    private final ReplyRepository replyRepository;
+    private final MentoringRepository mentoringRepository;
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
@@ -156,12 +162,24 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         List<Post> userPosts = postRepository.findByCreator(user);
+        List<Reply> userReplies = replyRepository.findByCreator(user);
+        List<Mentoring> mentorings = mentoringRepository.findByMentor(user);
 
         for (Post post : userPosts) {
             post.setCreator(null);
         }
 
+        for (Reply reply : userReplies) {
+            reply.setCreator(null);
+        }
+
+        for (Mentoring mentoring : mentorings) {
+            mentoring.setMentor(null);
+        }
+
         postRepository.saveAll(userPosts);
+        replyRepository.saveAll(userReplies);
+        mentoringRepository.saveAll(mentorings);
 
         userRepository.deleteById(userId);
     }
