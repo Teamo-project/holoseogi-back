@@ -14,6 +14,9 @@ public class ApplyMenteeInfoResp {
     private Long applicantId;
     private String applicantEmail;
     private String applicantName;
+    private String applicantGender;
+    private Integer applicantAge;
+    private String applicantRegion;
 
     public ApplyMenteeInfoResp(ApplyMentee applyMentee) {
         this.id = applyMentee.getId();
@@ -23,5 +26,8 @@ public class ApplyMenteeInfoResp {
         this.applicantId = applyMentee.getApplicant().getId();
         this.applicantEmail = applyMentee.getApplicant().getEmail();
         this.applicantName = applyMentee.getApplicant().getName();
+        this.applicantGender = applyMentee.getApplicant().getGender().getLabel();
+        this.applicantAge = applyMentee.getApplicant().getAge();
+        this.applicantRegion = applyMentee.getApplicant().getRegion().getLabel();
     }
 }
