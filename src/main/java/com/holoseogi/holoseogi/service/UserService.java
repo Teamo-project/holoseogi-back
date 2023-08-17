@@ -163,7 +163,7 @@ public class UserService {
 
         List<Post> userPosts = postRepository.findByCreator(user);
         List<Reply> userReplies = replyRepository.findByCreator(user);
-        List<Mentoring> mentorings = mentoringRepository.findByMentor(user);
+        List<Mentoring> mentorings = user.getMentorings();
 
         for (Post post : userPosts) {
             post.setCreator(null);
