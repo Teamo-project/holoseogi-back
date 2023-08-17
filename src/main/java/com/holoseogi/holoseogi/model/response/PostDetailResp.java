@@ -11,7 +11,7 @@ public class PostDetailResp {
     private String title;
     private String content;
     private LocalDateTime createDate;
-    private String creatorId; // Change type to String
+    private Long creatorId;
     private String category;
 
     public PostDetailResp(Post post) {
@@ -19,13 +19,13 @@ public class PostDetailResp {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.createDate = post.getCreateDate();
+      //  this.creatorId = post.getCreator().getId();
 
         if (post.getCreator() != null) {
-            this.creatorId = post.getCreator().getId().toString();
+            this.creatorId = post.getCreator().getId();
         } else {
-            this.creatorId = "NULL";  // Set creatorId to "NULL" if creator is null
+            this.creatorId = null;  // Set creatorId to null if creator is null
         }
-
         this.category = post.getCategory().getLabel();
     }
 }
