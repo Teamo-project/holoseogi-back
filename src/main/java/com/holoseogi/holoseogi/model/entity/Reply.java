@@ -37,4 +37,6 @@ public class Reply extends BaseEntity {
     public void update(UpdateReplyReq requestDto) {
         this.content = requestDto.getContent();
     }
+
+
 }

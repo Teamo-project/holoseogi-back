@@ -59,4 +59,10 @@ public class UserController {
         userService.logout();
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @DeleteMapping("/withdraw/{userId}")
+    public ResponseEntity deleteUser(@PathVariable("userId") Long userId) {
+        userService.deleteUserAndPosts(userId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }

@@ -1,10 +1,12 @@
 package com.holoseogi.holoseogi.service;
 
 import com.holoseogi.holoseogi.exception.BadRequestException;
+import com.holoseogi.holoseogi.model.entity.Post;
 import com.holoseogi.holoseogi.model.entity.User;
 import com.holoseogi.holoseogi.model.request.*;
 import com.holoseogi.holoseogi.model.response.EmailVerificationResult;
 import com.holoseogi.holoseogi.model.response.LoginTokenResp;
+import com.holoseogi.holoseogi.repository.PostRepository;
 import com.holoseogi.holoseogi.repository.UserRepository;
 import com.holoseogi.holoseogi.security.CustomUserDetails;
 import com.holoseogi.holoseogi.security.jwt.JwtTokenProvider;
@@ -23,8 +25,10 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -36,6 +40,8 @@ public class UserService {
     private final RedisService redisService;
     private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final PostRepository postRepository;
+
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
@@ -144,5 +150,24 @@ public class UserService {
         if (redisService.checkExistsValue(redisService.getValues("JWT_TOKEN:" + loginUser.getId()))) {
             redisService.deleteValues("JWT_TOKEN:" + loginUser.getId());
         }
+    }
+    @Transactional
+    public void deleteUserAndPosts(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Post> userPosts = postRepository.findByCreator(user);
+
+
+        for (Post post : userPosts) {
+            post.setCreator(null);
+        }
+
+
+
+        postRepository.saveAll(userPosts);
+
+
+        userRepository.deleteById(userId);
     }
 }

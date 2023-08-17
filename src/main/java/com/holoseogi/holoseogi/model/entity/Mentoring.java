@@ -73,5 +73,8 @@ public class Mentoring extends BaseEntity{
         count += 1;
         if(count == limited) changeReceiptToFalse();
     }
+
+
+
 }
 

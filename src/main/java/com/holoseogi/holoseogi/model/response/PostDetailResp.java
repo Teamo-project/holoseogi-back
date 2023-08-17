@@ -19,7 +19,13 @@ public class PostDetailResp {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.createDate = post.getCreateDate();
-        this.creatorId = post.getCreator().getId();
+      //  this.creatorId = post.getCreator().getId();
+
+        if (post.getCreator() != null) {
+            this.creatorId = post.getCreator().getId();
+        } else {
+            this.creatorId = null;  // Set creatorId to null if creator is null
+        }
         this.category = post.getCategory().getLabel();
     }
 }
