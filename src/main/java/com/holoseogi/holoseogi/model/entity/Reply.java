@@ -38,5 +38,7 @@ public class Reply extends BaseEntity {
         this.content = requestDto.getContent();
     }
 
-
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
 }

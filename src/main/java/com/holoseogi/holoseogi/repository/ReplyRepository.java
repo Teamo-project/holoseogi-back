@@ -18,4 +18,5 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     @Query("select r from Reply r " + "where r.content like %:content%")
     Page<Reply> searchReplies(Pageable pageable, @Param("content") String content);
 
+    List<Reply> findByCreator(User user);
 }

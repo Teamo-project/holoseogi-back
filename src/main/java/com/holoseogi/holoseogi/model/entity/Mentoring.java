@@ -75,6 +75,8 @@ public class Mentoring extends BaseEntity{
     }
 
 
-
+    public void setMentor(User mentor) {
+        this.mentor = mentor;
+    }
 }
 
