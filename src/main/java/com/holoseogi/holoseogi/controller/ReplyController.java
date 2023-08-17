@@ -35,11 +35,13 @@ public class ReplyController {
 
     @GetMapping("/{postId}/list")
     public ResponseEntity<Page<ReplyListResp>> getReplies(
+            @PathVariable("postId") Long postId,
             @PageableDefault(
                     size = 6,
                     sort = "createDate",
-                    direction = Sort.Direction.DESC) Pageable pageable, SearchReply searchReply) {
-        return ResponseEntity.ok(replyService.getRepliesDto(pageable, searchReply));
+                    direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ReplyListResp> repliesPage = replyService.getRepliesByPostId(postId, pageable);
+        return ResponseEntity.ok(repliesPage);
     }
 
     @PutMapping("/{postId}/{replyId}")

@@ -44,11 +44,9 @@ public class ReplyService {
 
 
     @Transactional(readOnly = true)
-    public Page<ReplyListResp>  getRepliesDto(Pageable pageable, SearchReply search) {
-        return replyRepository.searchReplies(pageable
-                        , search.getContent())
-                .map(ReplyListResp::new);
-
+    public Page<ReplyListResp> getRepliesByPostId(Long postId, Pageable pageable) {
+        Page<Reply> repliesPage = replyRepository.findByPostId(postId, pageable);
+        return repliesPage.map(ReplyListResp::new);
     }
 
 
