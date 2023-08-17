@@ -46,7 +46,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
     private final ReplyRepository replyRepository;
-    private final MentoringRepository mentoringRepository;
+
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
@@ -163,7 +163,7 @@ public class UserService {
 
         List<Post> userPosts = postRepository.findByCreator(user);
         List<Reply> userReplies = replyRepository.findByCreator(user);
-        List<Mentoring> mentorings = user.getMentorings();
+
 
         for (Post post : userPosts) {
             post.setCreator(null);
@@ -173,13 +173,11 @@ public class UserService {
             reply.setCreator(null);
         }
 
-        for (Mentoring mentoring : mentorings) {
-            mentoring.setMentor(null);
-        }
+
 
         postRepository.saveAll(userPosts);
         replyRepository.saveAll(userReplies);
-        mentoringRepository.saveAll(mentorings);
+
 
         userRepository.deleteById(userId);
     }

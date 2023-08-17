@@ -26,5 +26,5 @@ public interface MentoringRepository extends JpaRepository<Mentoring, Long> {
     @Query("select m from Mentoring m join fetch m.mentor men where m.id = :mentoringId")
     Optional<Mentoring> findWithMentorById(@Param("mentoringId") Long mentoringId);
 
-    List<Mentoring> findByMentor(User user);
+
 }
