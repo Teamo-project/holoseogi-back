@@ -24,7 +24,7 @@ public class PostDetailResp {
         if (post.getCreator() != null) {
             this.creatorId = post.getCreator().getId();
         } else {
-            this.creatorId = null;  // Set creatorId to null if creator is null
+            this.creatorId = -1L;  // Set creatorId to -1 if creator is null
         }
         this.category = post.getCategory().getLabel();
     }
