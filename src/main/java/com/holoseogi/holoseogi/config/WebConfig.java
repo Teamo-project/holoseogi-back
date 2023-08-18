@@ -13,7 +13,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000",
-                        "http://www.holoseogi.co.kr",
+                        "http://www.holoseogi.co.kr/",
+                        "http://www.holoseogi.co.kr", //수정 끝
                         "http://ec2-13-238-92-189.ap-southeast-2.compute.amazonaws.com:8000",
                         "http://ec2-13-238-92-189.ap-southeast-2.compute.amazonaws.com:8000/")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
